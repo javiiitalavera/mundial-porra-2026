@@ -57,3 +57,13 @@ La app recalcula todo automáticamente.
 2. Conectar API real de resultados del Mundial.
 3. Añadir caché para no depender de la API en cada visita.
 4. Añadir jornada actual, rachas, farolillo rojo y compartir ranking por WhatsApp.
+
+## V4 Premium
+
+Rediseño orientado a móvil:
+- Ranking con estado inicial, próximo partido, podio y lista limpia.
+- Partidos con hora española prioritaria, estado, resultado y desplegable de nombres por 1/X/2.
+- Pronósticos como quiniela individual, sin repetir "pendiente" innecesariamente.
+- Navegación inferior con pestaña activa.
+- Limpieza visual tipo app móvil premium.
+

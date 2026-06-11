@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { formatMatchDate, resultLabel } from "@/lib/format";
+import { formatDateSection, resultLabel } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getPlayerPredictions, getPlayerSummary, getPlayers } from "@/lib/scoring";
 
@@ -11,7 +11,7 @@ export function generateStaticParams() {
 }
 
 export default async function PlayerPredictionPage({
-  params,
+  params
 }: {
   params: Promise<{ player: string }>;
 }) {
@@ -24,10 +24,18 @@ export default async function PlayerPredictionPage({
 
   const summary = getPlayerSummary(player, payload.results);
 
+  const grouped = predictions.reduce((acc, item) => {
+    const key = item.match.date ?? "Fecha pendiente";
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {} as Record<string, typeof predictions>);
+
   return (
-    <section>
+    <section className="screen">
       <div className="page-header">
         <Link href="/pronosticos" className="back">← Pronósticos</Link>
+        <div className="eyebrow">Quiniela individual</div>
         <h1>{player}</h1>
         <p>
           {summary.played === 0
@@ -36,28 +44,32 @@ export default async function PlayerPredictionPage({
         </p>
       </div>
 
-      <div className="stack">
-        {predictions.map((item) => (
-          <article key={item.matchId} className="prediction-card">
-            <div>
-              <div className="meta-row">
-                <span>{formatMatchDate(item.match.date)}</span>
-                <span className="group-chip">Grupo {item.match.group ?? "—"}</span>
-              </div>
-              <div className="match-label">{item.match.label}</div>
-              <div className="muted">Resultado: {resultLabel(payload.results[item.matchId])}</div>
+      <div className="date-stack">
+        {Object.entries(grouped).map(([date, items]) => (
+          <section key={date} className="date-section">
+            <div className="date-heading slim">
+              <h2>{formatDateSection(date)}</h2>
             </div>
-            <div className="prediction-right">
-              <span className="chip">{item.pick}</span>
-              {item.isCorrect === null ? (
-                <span className="pill pending">Pendiente</span>
-              ) : item.isCorrect ? (
-                <span className="pill ok">+1</span>
-              ) : (
-                <span className="pill ko">0</span>
-              )}
+            <div className="prediction-list">
+              {items.map((item) => (
+                <article key={item.matchId} className="prediction-row">
+                  <div>
+                    <div className="match-label">{item.match.label}</div>
+                    <div className="muted">Grupo {item.match.group ?? "—"}</div>
+                  </div>
+                  <div className="prediction-result">
+                    <span className="pick-badge">{item.pick}</span>
+                    {item.isCorrect === null ? null : item.isCorrect ? (
+                      <span className="pill ok">+1</span>
+                    ) : (
+                      <span className="pill ko">0</span>
+                    )}
+                    {item.actual ? <span className="muted result-mini">{resultLabel(payload.results[item.matchId])}</span> : null}
+                  </div>
+                </article>
+              ))}
             </div>
-          </article>
+          </section>
         ))}
       </div>
     </section>

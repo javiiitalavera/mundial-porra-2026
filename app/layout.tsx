@@ -5,13 +5,13 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Porra Mundial 2026",
   description: "Ranking en directo de la porra del Mundial 2026",
-  manifest: "/manifest.json",
+  manifest: "/manifest.json"
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0f172a",
+  themeColor: "#eaf2f8",
   width: "device-width",
-  initialScale: 1,
+  initialScale: 1
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

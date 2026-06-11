@@ -6,8 +6,9 @@ export default async function AdminPage() {
   const payload = await getFootballDataResults();
 
   return (
-    <section>
+    <section className="screen">
       <div className="page-header">
+        <div className="eyebrow">Diagnóstico</div>
         <h1>Estado API</h1>
         <p>Pantalla oculta para comprobar si football-data.org está respondiendo.</p>
       </div>

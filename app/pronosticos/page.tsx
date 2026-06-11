@@ -10,23 +10,28 @@ export default async function PredictionsPage() {
   const players = getPlayerSummaries(payload.results);
 
   return (
-    <section>
+    <section className="screen">
       <div className="page-header">
+        <div className="eyebrow">Quinielas</div>
         <h1>Pronósticos</h1>
-        <p>La quiniela individual de cada jugador.</p>
+        <p>Revisa qué ha puesto cada jugador.</p>
       </div>
 
-      <div className="grid-list">
+      <div className="players-grid">
         {players.map((row) => (
-          <Link key={row.player} href={`/pronosticos/${normalizePlayerForUrl(row.player)}`} className="player-tile">
-            <span>{row.player}</span>
-            <div className="pronostic-summary">
-              {row.played === 0 ? (
-                <>Ver quiniela</>
-              ) : (
-                <>{row.correct} aciertos · {row.wrong} fallos</>
-              )}
+          <Link
+            key={row.player}
+            href={`/pronosticos/${normalizePlayerForUrl(row.player)}`}
+            className="player-card"
+          >
+            <div className="player-avatar">{row.player.slice(0, 1)}</div>
+            <div>
+              <div className="player-name">{row.player}</div>
+              <div className="muted">
+                {row.played === 0 ? "Ver quiniela" : `${row.correct} aciertos · ${row.wrong} fallos`}
+              </div>
             </div>
+            <div className="chevron">›</div>
           </Link>
         ))}
       </div>

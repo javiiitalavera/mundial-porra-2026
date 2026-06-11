@@ -1,5 +1,5 @@
 import { MatchCard } from "@/components/MatchCard";
-import { formatLongMatchDate } from "@/lib/format";
+import { formatDateSection, formatLongMatchDate } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches } from "@/lib/scoring";
 
@@ -17,19 +17,26 @@ export default async function MatchesPage() {
   }, {} as Record<string, typeof matches>);
 
   return (
-    <section>
+    <section className="screen">
       <div className="page-header">
+        <div className="eyebrow">Calendario</div>
         <h1>Partidos</h1>
-        <p>
-          Fecha, grupo, horario local, horario español y pronósticos de la porra.
-          {payload.error ? " La API todavía no está devolviendo resultados." : ""}
-        </p>
+        <p>Horario español, grupo y reparto de pronósticos.</p>
       </div>
+
+      {payload.error ? (
+        <div className="notice">
+          La API no está devolviendo resultados ahora mismo.
+        </div>
+      ) : null}
 
       <div className="date-stack">
         {Object.entries(grouped).map(([date, dayMatches]) => (
           <section key={date} className="date-section">
-            <h2>{formatLongMatchDate(date)}</h2>
+            <div className="date-heading">
+              <h2>{formatDateSection(date)}</h2>
+              <span>{formatLongMatchDate(date)}</span>
+            </div>
             <div className="stack">
               {dayMatches.map((match) => (
                 <MatchCard key={match.id} match={match} result={payload.results[match.id]} />

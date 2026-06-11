@@ -44,6 +44,20 @@ export function getPredictions(): Prediction[] {
   return allPredictions;
 }
 
+export function getUpcomingMatches(results: Record<string, MatchResult> = {}): Match[] {
+  return allMatches
+    .filter((match) => !results[match.id])
+    .sort((a, b) => {
+      const dateA = `${a.date ?? "9999-12-31"}-${a.order}`;
+      const dateB = `${b.date ?? "9999-12-31"}-${b.order}`;
+      return dateA.localeCompare(dateB);
+    });
+}
+
+export function getNextMatch(results: Record<string, MatchResult> = {}): Match | undefined {
+  return getUpcomingMatches(results)[0];
+}
+
 export function getScoredPredictions(results: Record<string, MatchResult> = {}): ScoredPrediction[] {
   const matchById = new Map(allMatches.map((match) => [match.id, match]));
 
@@ -129,10 +143,10 @@ export function getPlayerSummary(
   player: string,
   results: Record<string, MatchResult> = {}
 ): PlayerSummary {
-  const predictions = getPlayerPredictions(player, results);
-  const played = predictions.filter((item) => item.actual).length;
-  const correct = predictions.filter((item) => item.isCorrect === true).length;
-  const wrong = predictions.filter((item) => item.isCorrect === false).length;
+  const playerPredictions = getPlayerPredictions(player, results);
+  const played = playerPredictions.filter((item) => item.actual).length;
+  const correct = playerPredictions.filter((item) => item.isCorrect === true).length;
+  const wrong = playerPredictions.filter((item) => item.isCorrect === false).length;
 
   return {
     player,

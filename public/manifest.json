@@ -4,7 +4,7 @@
   "description": "Ranking móvil de la porra del Mundial 2026",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#08111f",
-  "theme_color": "#0f172a",
+  "background_color": "#eaf2f8",
+  "theme_color": "#eaf2f8",
   "icons": []
 }

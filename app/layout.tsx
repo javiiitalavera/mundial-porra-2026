@@ -3,13 +3,13 @@ import { BottomNav } from "@/components/BottomNav";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Porra Mundial 2026",
-  description: "Ranking en directo de la porra del Mundial 2026",
+  title: "Mundial 2026",
+  description: "Ranking en directo de Mundial 2026",
   manifest: "/manifest.json"
 };
 
 export const viewport: Viewport = {
-  themeColor: "#eaf2f8",
+  themeColor: "#f8f6f1",
   width: "device-width",
   initialScale: 1
 };

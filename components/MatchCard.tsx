@@ -34,43 +34,43 @@ export function MatchCard({
 
     return (
       <details className="pick-details">
-        <summary className={actual === pick ? "pick-chip hit" : "pick-chip"}>
-          <span className="pick-value">{pick}</span>
-          <span>{names.length}</span>
+        <summary className={actual === pick ? "pick-button is-hit" : "pick-button"}>
+          <span>{pick}</span>
+          <strong>{names.length}</strong>
         </summary>
-        <div className="pick-tooltip">
-          <div className="pick-tooltip-title">Han puesto {pick}</div>
-          <div>{names.join(", ")}</div>
+        <div className="pick-panel">
+          <div className="pick-panel-title">Han puesto {pick}</div>
+          <div className="pick-names">{names.join(", ")}</div>
         </div>
       </details>
     );
   };
 
   return (
-    <article className={featured ? "match-card featured-match" : "match-card"}>
-      <div className="match-card-head">
-        <div className="match-meta">
+    <article className={featured ? "match-card featured" : "match-card"}>
+      <div className="match-topline">
+        <div className="match-kicker">
           <span>{formatMatchDate(match.date)}</span>
           <span>Grupo {match.group ?? "—"}</span>
         </div>
-        <span className={result ? "status-pill done" : "status-pill"}>
+        <span className={result ? "match-state is-done" : "match-state"}>
           {statusLabel(result)}
         </span>
       </div>
 
-      <div className="match-score-line">
-        <div className="team-name">{match.home}</div>
-        <div className={result ? "score done" : "score"}>{resultLabel(result)}</div>
-        <div className="team-name right">{match.away}</div>
+      <div className="match-main">
+        <div className="team home">{match.home}</div>
+        <div className={result ? "score is-done" : "score"}>{resultLabel(result)}</div>
+        <div className="team away">{match.away}</div>
       </div>
 
-      <div className="match-subline">
-        <span className="primary-time">{match.timeEt ? formatSpainTimeFromEt(match.timeEt) : "Hora pendiente"}</span>
+      <div className="match-time">
+        <span>{match.timeEt ? formatSpainTimeFromEt(match.timeEt) : "Hora pendiente"}</span>
         {match.timeLocal ? <span>{match.timeLocal} local</span> : null}
         {match.city ? <span>{match.city}</span> : null}
       </div>
 
-      <div className="pick-row" aria-label="Distribución de pronósticos">
+      <div className="pick-row">
         {renderPick("1")}
         {renderPick("X")}
         {renderPick("2")}

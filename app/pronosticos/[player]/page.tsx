@@ -33,38 +33,39 @@ export default async function PlayerPredictionPage({
 
   return (
     <section className="screen">
-      <div className="page-header">
-        <Link href="/pronosticos" className="back">← Pronósticos</Link>
-        <div className="eyebrow">Quiniela individual</div>
+      <header className="page-header">
+        <Link href="/pronosticos" className="back-link">← Quinielas</Link>
+        <div className="section-label">Jugador</div>
         <h1>{player}</h1>
         <p>
           {summary.played === 0
             ? "Quiniela completa"
             : `${summary.correct} aciertos · ${summary.wrong} fallos · ${summary.pending} pendientes`}
         </p>
-      </div>
+      </header>
 
       <div className="date-stack">
         {Object.entries(grouped).map(([date, items]) => (
           <section key={date} className="date-section">
-            <div className="date-heading slim">
+            <div className="date-title slim">
               <h2>{formatDateSection(date)}</h2>
             </div>
-            <div className="prediction-list">
+
+            <div className="prediction-stack">
               {items.map((item) => (
                 <article key={item.matchId} className="prediction-row">
                   <div>
-                    <div className="match-label">{item.match.label}</div>
+                    <div className="fixture-name">{item.match.label}</div>
                     <div className="muted">Grupo {item.match.group ?? "—"}</div>
                   </div>
-                  <div className="prediction-result">
+                  <div className="prediction-right">
                     <span className="pick-badge">{item.pick}</span>
                     {item.isCorrect === null ? null : item.isCorrect ? (
-                      <span className="pill ok">+1</span>
+                      <span className="result-pill ok">+1</span>
                     ) : (
-                      <span className="pill ko">0</span>
+                      <span className="result-pill ko">0</span>
                     )}
-                    {item.actual ? <span className="muted result-mini">{resultLabel(payload.results[item.matchId])}</span> : null}
+                    {item.actual ? <span className="muted score-mini">{resultLabel(payload.results[item.matchId])}</span> : null}
                   </div>
                 </article>
               ))}

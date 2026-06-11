@@ -13,22 +13,22 @@ export function StandingCard({
 }) {
   const subtitle =
     row.played === 0
-      ? "Esperando el primer resultado"
+      ? "Sin partidos puntuados"
       : `${row.correct}/${row.played} aciertos · ${row.percentage}%`;
 
   return (
     <Link
       href={`/pronosticos/${normalizePlayerForUrl(row.player)}`}
-      className={compact ? "standing-card compact" : "standing-card"}
+      className={compact ? "standing-row compact" : "standing-row"}
     >
-      <div className="rank">{position}</div>
-      <div className="standing-main">
+      <div className="standing-position">{position}</div>
+      <div className="standing-person">
         <div className="standing-name">{row.player}</div>
         <div className="muted">{subtitle}</div>
       </div>
-      <div className="points-block">
-        <div className="points">{row.points}</div>
-        <div className="points-label">pts</div>
+      <div className="standing-points">
+        <strong>{row.points}</strong>
+        <span>pts</span>
       </div>
     </Link>
   );

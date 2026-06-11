@@ -18,26 +18,24 @@ export default async function MatchesPage() {
 
   return (
     <section className="screen">
-      <div className="page-header">
-        <div className="eyebrow">Calendario</div>
+      <header className="page-header">
+        <div className="section-label">Calendario</div>
         <h1>Partidos</h1>
-        <p>Horario español, grupo y reparto de pronósticos.</p>
-      </div>
+        <p>Horario español, grupo y reparto de quinielas.</p>
+      </header>
 
       {payload.error ? (
-        <div className="notice">
-          La API no está devolviendo resultados ahora mismo.
-        </div>
+        <div className="system-notice">La API no está devolviendo resultados ahora mismo.</div>
       ) : null}
 
       <div className="date-stack">
         {Object.entries(grouped).map(([date, dayMatches]) => (
           <section key={date} className="date-section">
-            <div className="date-heading">
+            <div className="date-title">
               <h2>{formatDateSection(date)}</h2>
               <span>{formatLongMatchDate(date)}</span>
             </div>
-            <div className="stack">
+            <div className="match-stack">
               {dayMatches.map((match) => (
                 <MatchCard key={match.id} match={match} result={payload.results[match.id]} />
               ))}

@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const items = [
-  { href: "/", label: "Ranking", icon: "🏆" },
-  { href: "/partidos", label: "Partidos", icon: "⚽" },
-  { href: "/pronosticos", label: "Pronósticos", icon: "📝" }
+  { href: "/", label: "Ranking" },
+  { href: "/partidos", label: "Partidos" },
+  { href: "/pronosticos", label: "Quinielas" }
 ];
 
 function isActive(pathname: string, href: string): boolean {
@@ -25,8 +25,7 @@ export function BottomNav() {
           href={item.href}
           className={isActive(pathname, item.href) ? "active" : ""}
         >
-          <span aria-hidden="true">{item.icon}</span>
-          <span>{item.label}</span>
+          {item.label}
         </Link>
       ))}
     </nav>

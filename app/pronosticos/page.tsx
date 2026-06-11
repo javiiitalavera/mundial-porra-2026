@@ -11,27 +11,23 @@ export default async function PredictionsPage() {
 
   return (
     <section className="screen">
-      <div className="page-header">
-        <div className="eyebrow">Quinielas</div>
-        <h1>Pronósticos</h1>
-        <p>Revisa qué ha puesto cada jugador.</p>
-      </div>
+      <header className="page-header">
+        <div className="section-label">Quinielas</div>
+        <h1>Quinielas</h1>
+        <p>Consulta qué ha puesto cada jugador.</p>
+      </header>
 
-      <div className="players-grid">
+      <div className="player-list">
         {players.map((row) => (
-          <Link
-            key={row.player}
-            href={`/pronosticos/${normalizePlayerForUrl(row.player)}`}
-            className="player-card"
-          >
-            <div className="player-avatar">{row.player.slice(0, 1)}</div>
+          <Link key={row.player} href={`/pronosticos/${normalizePlayerForUrl(row.player)}`} className="player-row">
+            <div className="avatar">{row.player.slice(0, 1)}</div>
             <div>
               <div className="player-name">{row.player}</div>
               <div className="muted">
                 {row.played === 0 ? "Ver quiniela" : `${row.correct} aciertos · ${row.wrong} fallos`}
               </div>
             </div>
-            <div className="chevron">›</div>
+            <div className="row-arrow" aria-hidden="true">›</div>
           </Link>
         ))}
       </div>

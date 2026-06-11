@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { BottomNav } from "@/components/BottomNav";
+import { PullToRefresh } from "@/components/PullToRefresh";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f8f6f1",
+  themeColor: "#ffb31a",
   width: "device-width",
   initialScale: 1
 };
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <body>
+        <PullToRefresh />
         <main className="app-shell">{children}</main>
         <BottomNav />
       </body>

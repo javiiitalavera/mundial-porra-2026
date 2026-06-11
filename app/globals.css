@@ -732,3 +732,138 @@ pre {
   font-size: 12px;
 }
 
+/* V6: tono más fresco, menos formal, tipografía redondeada y pull-to-refresh */
+:root {
+  --bg: #fff6df;
+  --surface: #ffffff;
+  --surface-soft: #fff9ec;
+  --ink: #17130c;
+  --text: #2c2519;
+  --muted: #857763;
+  --line: #eadfc9;
+  --line-strong: #ddcaa6;
+  --gold: #ffb31a;
+  --gold-soft: #fff0c4;
+  --green: #18704a;
+  --red: #a33b35;
+  --blue: #1c3f60;
+  --shadow: 0 18px 42px rgba(77, 54, 13, 0.10);
+}
+
+html,
+body {
+  background:
+    radial-gradient(circle at 50% -18%, rgba(255, 179, 26, 0.28), transparent 18rem),
+    var(--bg);
+  font-family:
+    ui-rounded,
+    "Avenir Next",
+    "Nunito",
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Rounded",
+    "SF Pro Display",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+}
+
+.app-header h1,
+.page-header h1 {
+  font-family:
+    ui-rounded,
+    "Avenir Next",
+    "SF Pro Rounded",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  font-size: 40px;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  font-weight: 820;
+}
+
+.section-label {
+  color: #cf7a00;
+  font-weight: 820;
+}
+
+.live-badge {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
+}
+
+.live-badge::before {
+  background: var(--gold);
+}
+
+.quiet-card,
+.match-card,
+.podium-card,
+.standing-row,
+.player-row,
+.prediction-row,
+.code-card,
+.install-hero-card,
+.install-section {
+  border-color: rgba(44, 37, 25, 0.08);
+  box-shadow: 0 10px 24px rgba(77, 54, 13, 0.06);
+}
+
+.match-card.featured,
+.podium-card.rank-1 {
+  background: linear-gradient(180deg, #ffffff, #fff7df);
+  border-color: #e9c365;
+}
+
+.score.is-done,
+.bottom-nav a.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink);
+}
+
+.bottom-nav {
+  background: rgba(255, 255, 255, 0.90);
+  border-color: rgba(44, 37, 25, 0.08);
+}
+
+.bottom-nav a {
+  font-weight: 720;
+}
+
+.pick-button.is-hit {
+  background: var(--gold-soft);
+}
+
+.pull-refresh {
+  position: fixed;
+  top: -42px;
+  left: 50%;
+  z-index: 999;
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: white;
+  font-size: 12px;
+  font-weight: 760;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 10px 24px rgba(77, 54, 13, 0.16);
+  transition: opacity 120ms ease;
+}
+
+.pull-refresh.visible {
+  opacity: 1;
+}
+
+@media (max-width: 390px) {
+  .app-header h1,
+  .page-header h1 {
+    font-size: 36px;
+  }
+}
+

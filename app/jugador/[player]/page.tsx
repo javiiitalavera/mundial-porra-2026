@@ -4,11 +4,17 @@ import { resultLabel } from "@/lib/format";
 import { getPlayerPredictions, getPlayers, getResults, getStandings } from "@/lib/scoring";
 
 export function generateStaticParams() {
-  return getPlayers().map((player) => ({ player: encodeURIComponent(player) }));
+  return getPlayers().map((player) => ({ player }));
 }
 
-export default function PlayerPage({ params }: { params: { player: string } }) {
-  const player = decodeURIComponent(params.player);
+export default async function PlayerPage({
+  params,
+}: {
+  params: Promise<{ player: string }>;
+}) {
+  const { player: rawPlayer } = await params;
+  const player = decodeURIComponent(rawPlayer);
+
   const predictions = getPlayerPredictions(player);
   if (predictions.length === 0) notFound();
 

@@ -4,6 +4,11 @@ import type { Match, MatchResult } from "@/lib/types";
 const API_URL = "https://api.football-data.org/v4/competitions/WC/matches";
 const SEASON = "2026";
 
+// 10 minutos. El plan free permite 10/min, pero en Vercel varias rutas/usuarios pueden disparar ráfagas.
+// Para una porra, 10 min es suficiente y evita rate limits.
+const CACHE_SECONDS = 600;
+const CACHE_MS = CACHE_SECONDS * 1000;
+
 type FootballDataMatch = {
   id: number;
   utcDate: string;
@@ -45,12 +50,15 @@ export type ApiResultsPayload = {
   error?: string;
   matchedFixtures: number;
   rawMatches: number;
+  stale?: boolean;
 };
 
 const matches = matchesJson as Match[];
 
+// Memoria por lambda caliente. No es una base de datos, pero reduce muchas llamadas repetidas.
 let memoryCache: { payload: ApiResultsPayload; expiresAt: number } | null = null;
-const CACHE_MS = 60_000;
+let lastGoodPayload: ApiResultsPayload | null = null;
+let inFlight: Promise<ApiResultsPayload> | null = null;
 
 function normalize(value?: string | null): string {
   return (value ?? "")
@@ -154,18 +162,22 @@ function matchFixture(match: Match, fixture: FootballDataMatch): "direct" | "rev
   return null;
 }
 
+function safeEmptyPayload(error: string): ApiResultsPayload {
+  return {
+    results: {},
+    updatedAt: new Date().toISOString(),
+    source: "football-data",
+    matchedFixtures: 0,
+    rawMatches: 0,
+    error
+  };
+}
+
 async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
   const token = process.env.FOOTBALL_DATA_TOKEN;
 
   if (!token) {
-    return {
-      results: {},
-      updatedAt: new Date().toISOString(),
-      source: "football-data",
-      matchedFixtures: 0,
-      rawMatches: 0,
-      error: "Falta FOOTBALL_DATA_TOKEN en las variables de entorno."
-    };
+    return safeEmptyPayload("Falta FOOTBALL_DATA_TOKEN en las variables de entorno.");
   }
 
   const url = `${API_URL}?season=${SEASON}`;
@@ -175,23 +187,26 @@ async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
       headers: {
         "X-Auth-Token": token
       },
-      // Cachea la llamada en Vercel/Next durante 60s. Evita que cada navegación espere a la API externa.
       next: {
-        revalidate: 60
+        revalidate: CACHE_SECONDS
       }
     });
 
     const data = (await response.json()) as FootballDataResponse;
 
     if (!response.ok) {
-      return {
-        results: {},
-        updatedAt: new Date().toISOString(),
-        source: "football-data",
-        matchedFixtures: 0,
-        rawMatches: data.matches?.length ?? 0,
-        error: data.message ?? `football-data respondió con HTTP ${response.status}.`
-      };
+      const message = data.message ?? `football-data respondió con HTTP ${response.status}.`;
+
+      // Si football-data limita, no tiramos la app. Si hay último payload bueno en lambda caliente, usamos ese.
+      if (lastGoodPayload) {
+        return {
+          ...lastGoodPayload,
+          stale: true,
+          error: `Mostrando última actualización disponible. ${message}`
+        };
+      }
+
+      return safeEmptyPayload(message);
     }
 
     const apiMatches = data.matches ?? [];
@@ -211,9 +226,7 @@ async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
       const rawHome = direction === "direct" ? fixture.score.fullTime.home : fixture.score.fullTime.away;
       const rawAway = direction === "direct" ? fixture.score.fullTime.away : fixture.score.fullTime.home;
 
-      if (typeof rawHome !== "number" || typeof rawAway !== "number") {
-        continue;
-      }
+      if (typeof rawHome !== "number" || typeof rawAway !== "number") continue;
 
       results[match.id] = {
         homeGoals: rawHome,
@@ -223,22 +236,28 @@ async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
       };
     }
 
-    return {
+    const payload: ApiResultsPayload = {
       results,
       updatedAt: new Date().toISOString(),
       source: "football-data",
       matchedFixtures,
       rawMatches: apiMatches.length
     };
+
+    lastGoodPayload = payload;
+    return payload;
   } catch (error) {
-    return {
-      results: {},
-      updatedAt: new Date().toISOString(),
-      source: "football-data",
-      matchedFixtures: 0,
-      rawMatches: 0,
-      error: error instanceof Error ? error.message : "Error desconocido consultando football-data."
-    };
+    const message = error instanceof Error ? error.message : "Error desconocido consultando football-data.";
+
+    if (lastGoodPayload) {
+      return {
+        ...lastGoodPayload,
+        stale: true,
+        error: `Mostrando última actualización disponible. ${message}`
+      };
+    }
+
+    return safeEmptyPayload(message);
   }
 }
 
@@ -249,7 +268,15 @@ export async function getFootballDataResults(): Promise<ApiResultsPayload> {
     return memoryCache.payload;
   }
 
-  const payload = await fetchFootballDataResults();
+  if (!inFlight) {
+    inFlight = fetchFootballDataResults().finally(() => {
+      inFlight = null;
+    });
+  }
+
+  const payload = await inFlight;
+
+  // Cacheamos también errores breves para no entrar en bucle de rate-limit.
   memoryCache = {
     payload,
     expiresAt: now + CACHE_MS

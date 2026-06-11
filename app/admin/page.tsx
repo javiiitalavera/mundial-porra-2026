@@ -1,6 +1,6 @@
 import { getFootballDataResults } from "@/lib/footballData";
 
-export const revalidate = 60;
+export const revalidate = 600;
 
 export default async function AdminPage() {
   const payload = await getFootballDataResults();

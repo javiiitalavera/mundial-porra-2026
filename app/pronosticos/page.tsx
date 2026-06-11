@@ -3,7 +3,7 @@ import { normalizePlayerForUrl } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getPlayerSummaries } from "@/lib/scoring";
 
-export const revalidate = 60;
+export const revalidate = 600;
 
 export default async function PredictionsPage() {
   const payload = await getFootballDataResults();

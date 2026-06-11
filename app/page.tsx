@@ -4,7 +4,7 @@ import { formatStartsIn } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches, getNextMatch, getStandings } from "@/lib/scoring";
 
-export const revalidate = 60;
+export const revalidate = 600;
 
 export default async function HomePage() {
   const payload = await getFootballDataResults();

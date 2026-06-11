@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { getApiFootballResults } from "@/lib/apiFootball";
+import { getFootballDataResults } from "@/lib/footballData";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const payload = await getApiFootballResults();
+  const payload = await getFootballDataResults();
   return NextResponse.json(payload);
 }

@@ -1,11 +1,11 @@
 import { StandingCard } from "@/components/StandingCard";
-import { getApiFootballResults } from "@/lib/apiFootball";
+import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches, getStandings } from "@/lib/scoring";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const payload = await getApiFootballResults();
+  const payload = await getFootballDataResults();
   const standings = getStandings(payload.results);
   const played = Object.keys(payload.results).length;
   const total = getMatches().length;

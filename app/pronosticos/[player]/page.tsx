@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatMatchDate, resultLabel } from "@/lib/format";
-import { getApiFootballResults } from "@/lib/apiFootball";
+import { getFootballDataResults } from "@/lib/footballData";
 import { getPlayerPredictions, getPlayerSummary, getPlayers } from "@/lib/scoring";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +18,7 @@ export default async function PlayerPredictionPage({
   const { player: rawPlayer } = await params;
   const player = decodeURIComponent(rawPlayer);
 
-  const payload = await getApiFootballResults();
+  const payload = await getFootballDataResults();
   const predictions = getPlayerPredictions(player, payload.results);
   if (predictions.length === 0) notFound();
 

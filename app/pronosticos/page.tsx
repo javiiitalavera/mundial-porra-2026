@@ -18,7 +18,7 @@ export default function PredictionsPage() {
             <span>{row.player}</span>
             <div className="pronostic-summary">
               {row.played === 0 ? (
-                <>72 pendientes</>
+                <>Ver quiniela</>
               ) : (
                 <>{row.correct} aciertos · {row.wrong} fallos</>
               )}

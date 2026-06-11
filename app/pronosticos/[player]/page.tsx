@@ -28,7 +28,7 @@ export default async function PlayerPredictionPage({
         <h1>{player}</h1>
         <p>
           {summary.played === 0
-            ? "72 pronósticos pendientes"
+            ? "Quiniela completa"
             : `${summary.correct} aciertos · ${summary.wrong} fallos · ${summary.pending} pendientes`}
         </p>
       </div>

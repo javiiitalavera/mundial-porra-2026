@@ -1,6 +1,6 @@
-import { formatMatchDate, resultLabel } from "@/lib/format";
+import { formatMatchDate, formatSpainTimeFromEt, resultLabel } from "@/lib/format";
 import { getMatchPredictions, signFromResult } from "@/lib/scoring";
-import type { Match, MatchResult } from "@/lib/types";
+import type { Match, MatchResult, Pick } from "@/lib/types";
 
 export function MatchCard({
   match,
@@ -12,13 +12,29 @@ export function MatchCard({
   const actual = signFromResult(result);
   const predictions = getMatchPredictions(match.id);
 
-  const counts = predictions.reduce(
+  const grouped = predictions.reduce(
     (acc, item) => {
-      acc[item.pick] += 1;
+      acc[item.pick].push(item.player);
       return acc;
     },
-    { "1": 0, X: 0, "2": 0 } as Record<"1" | "X" | "2", number>
+    { "1": [], X: [], "2": [] } as Record<Pick, string[]>
   );
+
+  const renderPick = (pick: Pick) => {
+    const names = grouped[pick];
+
+    return (
+      <details className="pick-details">
+        <summary className={actual === pick ? "chip hit pick-summary" : "chip pick-summary"}>
+          {pick} · {names.length}
+        </summary>
+        <div className="pick-tooltip">
+          <div className="pick-tooltip-title">Han puesto {pick}</div>
+          <div>{names.join(", ")}</div>
+        </div>
+      </details>
+    );
+  };
 
   return (
     <article className="match-card">
@@ -29,18 +45,19 @@ export function MatchCard({
             <span className="group-chip">Grupo {match.group ?? "—"}</span>
           </div>
           <div className="match-label">{match.home} - {match.away}</div>
-          <div className="muted">
-            {match.city}
-            {match.timeLocal ? ` · ${match.timeLocal} local` : ""}
+          <div className="muted match-time-row">
+            {match.city ? <span>{match.city}</span> : null}
+            {match.timeLocal ? <span>{match.timeLocal} local</span> : null}
+            {match.timeEt ? <span>{formatSpainTimeFromEt(match.timeEt)}</span> : null}
           </div>
         </div>
         <div className={result ? "score done" : "score"}>{resultLabel(result)}</div>
       </div>
 
       <div className="pick-row">
-        <span className={actual === "1" ? "chip hit" : "chip"}>1 · {counts["1"]}</span>
-        <span className={actual === "X" ? "chip hit" : "chip"}>X · {counts.X}</span>
-        <span className={actual === "2" ? "chip hit" : "chip"}>2 · {counts["2"]}</span>
+        {renderPick("1")}
+        {renderPick("X")}
+        {renderPick("2")}
       </div>
     </article>
   );

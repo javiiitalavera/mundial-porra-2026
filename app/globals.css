@@ -411,3 +411,63 @@ pre {
   font-weight: 700;
 }
 
+/* V2.1: hora española y desplegable de pronósticos por partido */
+.match-time-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.match-time-row span + span::before {
+  content: "·";
+  margin-right: 6px;
+  color: var(--muted);
+}
+
+.pick-details {
+  position: relative;
+}
+
+.pick-summary {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.pick-summary::-webkit-details-marker {
+  display: none;
+}
+
+.pick-tooltip {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  z-index: 20;
+  width: min(260px, calc(100vw - 42px));
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card, var(--panel, #fff));
+  color: var(--text);
+  box-shadow: 0 14px 34px rgba(35, 57, 80, 0.18);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.pick-details[open] .pick-tooltip {
+  display: block;
+}
+
+.pick-tooltip-title {
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pick-row .pick-details:last-child .pick-tooltip {
+  left: auto;
+  right: 0;
+}

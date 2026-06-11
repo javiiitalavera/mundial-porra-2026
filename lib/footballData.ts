@@ -1,13 +1,13 @@
+import { Redis } from "@upstash/redis";
 import matchesJson from "@/data/matches.json";
 import type { Match, MatchResult } from "@/lib/types";
 
 const API_URL = "https://api.football-data.org/v4/competitions/WC/matches";
 const SEASON = "2026";
 
-// 10 minutos. El plan free permite 10/min, pero en Vercel varias rutas/usuarios pueden disparar ráfagas.
-// Para una porra, 10 min es suficiente y evita rate limits.
 const CACHE_SECONDS = 600;
 const CACHE_MS = CACHE_SECONDS * 1000;
+const REDIS_KEY = "mundial-2026:last-good-results";
 
 type FootballDataMatch = {
   id: number;
@@ -51,14 +51,23 @@ export type ApiResultsPayload = {
   matchedFixtures: number;
   rawMatches: number;
   stale?: boolean;
+  cache?: "fresh" | "memory" | "redis" | "empty";
 };
 
 const matches = matchesJson as Match[];
 
-// Memoria por lambda caliente. No es una base de datos, pero reduce muchas llamadas repetidas.
 let memoryCache: { payload: ApiResultsPayload; expiresAt: number } | null = null;
 let lastGoodPayload: ApiResultsPayload | null = null;
 let inFlight: Promise<ApiResultsPayload> | null = null;
+
+function getRedis(): Redis | null {
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  if (!url || !token) return null;
+
+  return new Redis({ url, token });
+}
 
 function normalize(value?: string | null): string {
   return (value ?? "")
@@ -169,15 +178,60 @@ function safeEmptyPayload(error: string): ApiResultsPayload {
     source: "football-data",
     matchedFixtures: 0,
     rawMatches: 0,
-    error
+    error,
+    cache: "empty"
   };
+}
+
+async function readPersistentCache(error?: string): Promise<ApiResultsPayload | null> {
+  if (lastGoodPayload) {
+    return {
+      ...lastGoodPayload,
+      stale: true,
+      cache: "memory",
+      error: error ? `Mostrando última actualización disponible. ${error}` : undefined
+    };
+  }
+
+  const redis = getRedis();
+  if (!redis) return null;
+
+  try {
+    const cached = await redis.get<ApiResultsPayload>(REDIS_KEY);
+    if (!cached) return null;
+
+    lastGoodPayload = cached;
+
+    return {
+      ...cached,
+      stale: true,
+      cache: "redis",
+      error: error ? `Mostrando última actualización guardada. ${error}` : undefined
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function writePersistentCache(payload: ApiResultsPayload): Promise<void> {
+  lastGoodPayload = payload;
+
+  const redis = getRedis();
+  if (!redis) return;
+
+  try {
+    await redis.set(REDIS_KEY, payload);
+  } catch {
+    // No rompemos la app si Redis falla.
+  }
 }
 
 async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
   const token = process.env.FOOTBALL_DATA_TOKEN;
 
   if (!token) {
-    return safeEmptyPayload("Falta FOOTBALL_DATA_TOKEN en las variables de entorno.");
+    const cached = await readPersistentCache("Falta FOOTBALL_DATA_TOKEN en las variables de entorno.");
+    return cached ?? safeEmptyPayload("Falta FOOTBALL_DATA_TOKEN en las variables de entorno.");
   }
 
   const url = `${API_URL}?season=${SEASON}`;
@@ -196,17 +250,8 @@ async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
 
     if (!response.ok) {
       const message = data.message ?? `football-data respondió con HTTP ${response.status}.`;
-
-      // Si football-data limita, no tiramos la app. Si hay último payload bueno en lambda caliente, usamos ese.
-      if (lastGoodPayload) {
-        return {
-          ...lastGoodPayload,
-          stale: true,
-          error: `Mostrando última actualización disponible. ${message}`
-        };
-      }
-
-      return safeEmptyPayload(message);
+      const cached = await readPersistentCache(message);
+      return cached ?? safeEmptyPayload(message);
     }
 
     const apiMatches = data.matches ?? [];
@@ -241,23 +286,18 @@ async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
       updatedAt: new Date().toISOString(),
       source: "football-data",
       matchedFixtures,
-      rawMatches: apiMatches.length
+      rawMatches: apiMatches.length,
+      cache: "fresh"
     };
 
-    lastGoodPayload = payload;
+    // Guardamos también cuando todavía no hay resultados, porque confirma 72 emparejados.
+    await writePersistentCache(payload);
+
     return payload;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Error desconocido consultando football-data.";
-
-    if (lastGoodPayload) {
-      return {
-        ...lastGoodPayload,
-        stale: true,
-        error: `Mostrando última actualización disponible. ${message}`
-      };
-    }
-
-    return safeEmptyPayload(message);
+    const cached = await readPersistentCache(message);
+    return cached ?? safeEmptyPayload(message);
   }
 }
 
@@ -265,7 +305,10 @@ export async function getFootballDataResults(): Promise<ApiResultsPayload> {
   const now = Date.now();
 
   if (memoryCache && memoryCache.expiresAt > now) {
-    return memoryCache.payload;
+    return {
+      ...memoryCache.payload,
+      cache: memoryCache.payload.cache ?? "memory"
+    };
   }
 
   if (!inFlight) {
@@ -276,7 +319,6 @@ export async function getFootballDataResults(): Promise<ApiResultsPayload> {
 
   const payload = await inFlight;
 
-  // Cacheamos también errores breves para no entrar en bucle de rate-limit.
   memoryCache = {
     payload,
     expiresAt: now + CACHE_MS

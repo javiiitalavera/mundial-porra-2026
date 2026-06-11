@@ -3,7 +3,7 @@ import { formatDateSection, formatLongMatchDate } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches } from "@/lib/scoring";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function MatchesPage() {
   const matches = getMatches();

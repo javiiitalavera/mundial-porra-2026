@@ -49,6 +49,9 @@ export type ApiResultsPayload = {
 
 const matches = matchesJson as Match[];
 
+let memoryCache: { payload: ApiResultsPayload; expiresAt: number } | null = null;
+const CACHE_MS = 60_000;
+
 function normalize(value?: string | null): string {
   return (value ?? "")
     .normalize("NFD")
@@ -62,10 +65,10 @@ function normalize(value?: string | null): string {
 const TEAM_ALIASES: Record<string, string[]> = {
   "México": ["Mexico", "MEX"],
   "Sudáfrica": ["South Africa", "RSA"],
-  "Corea del Sur": ["South Korea", "Korea Republic", "KOR"],
+  "Corea del Sur": ["South Korea", "Korea Republic", "KoreaRepublic", "KOR"],
   "República Checa": ["Czech Republic", "Czechia", "CZE"],
   "Canadá": ["Canada", "CAN"],
-  "Bosnia y Herzegovina": ["Bosnia and Herzegovina", "Bosnia-Herzegovina", "Bosnia", "BIH"],
+  "Bosnia y Herzegovina": ["Bosnia and Herzegovina", "Bosnia-Herzegovina", "Bosnia-H.", "Bosnia", "BIH"],
   "Estados Unidos": ["United States", "USA", "United States of America"],
   "Paraguay": ["Paraguay", "PAR"],
   "Catar": ["Qatar", "QAT"],
@@ -134,7 +137,6 @@ function intersects(a: string[], b: string[]): boolean {
 }
 
 function matchFixture(match: Match, fixture: FootballDataMatch): "direct" | "reverse" | null {
-  // Fecha ayuda, pero no la hacemos obligatoria porque los horarios UTC pueden cruzar medianoche.
   const dateLooksClose = sameDate(fixture.utcDate, match.date);
   const matchHomeAliases = aliasesFor(match.home);
   const matchAwayAliases = aliasesFor(match.away);
@@ -146,15 +148,13 @@ function matchFixture(match: Match, fixture: FootballDataMatch): "direct" | "rev
 
   if (direct && dateLooksClose) return "direct";
   if (reverse && dateLooksClose) return "reverse";
-
-  // Fallback por si football-data usa UTC y la fecha local difiere un día.
   if (direct) return "direct";
   if (reverse) return "reverse";
 
   return null;
 }
 
-export async function getFootballDataResults(): Promise<ApiResultsPayload> {
+async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
   const token = process.env.FOOTBALL_DATA_TOKEN;
 
   if (!token) {
@@ -175,6 +175,7 @@ export async function getFootballDataResults(): Promise<ApiResultsPayload> {
       headers: {
         "X-Auth-Token": token
       },
+      // Cachea la llamada en Vercel/Next durante 60s. Evita que cada navegación espere a la API externa.
       next: {
         revalidate: 60
       }
@@ -239,4 +240,20 @@ export async function getFootballDataResults(): Promise<ApiResultsPayload> {
       error: error instanceof Error ? error.message : "Error desconocido consultando football-data."
     };
   }
+}
+
+export async function getFootballDataResults(): Promise<ApiResultsPayload> {
+  const now = Date.now();
+
+  if (memoryCache && memoryCache.expiresAt > now) {
+    return memoryCache.payload;
+  }
+
+  const payload = await fetchFootballDataResults();
+  memoryCache = {
+    payload,
+    expiresAt: now + CACHE_MS
+  };
+
+  return payload;
 }

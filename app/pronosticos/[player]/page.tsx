@@ -4,7 +4,7 @@ import { formatDateSection, resultLabel } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getPlayerPredictions, getPlayerSummary, getPlayers } from "@/lib/scoring";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export function generateStaticParams() {
   return getPlayers().map((player) => ({ player }));

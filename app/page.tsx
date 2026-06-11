@@ -3,7 +3,7 @@ import { StandingCard } from "@/components/StandingCard";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches, getNextMatch, getStandings } from "@/lib/scoring";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function HomePage() {
   const payload = await getFootballDataResults();

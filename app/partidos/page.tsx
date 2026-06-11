@@ -8,6 +8,7 @@ export const revalidate = 600;
 export default async function MatchesPage() {
   const matches = getMatches();
   const payload = await getFootballDataResults();
+  const played = Object.keys(payload.results).length;
 
   const grouped = matches.reduce((acc, match) => {
     const key = match.date ?? "Fecha pendiente";
@@ -17,15 +18,15 @@ export default async function MatchesPage() {
   }, {} as Record<string, typeof matches>);
 
   return (
-    <section className="screen">
-      <header className="page-header">
+    <section className="screen v8-screen">
+      <header className="page-header v8-page-header">
         <div className="section-label">Calendario</div>
-        <h1>Partidos</h1>
-        <p>Horario español, grupo y reparto de quinielas.</p>
+        <h1>Todos los partidos</h1>
+        <p>{matches.length} partidos · {played} puntuados</p>
       </header>
 
       {payload.error ? (
-        <div className="system-notice">La API no está devolviendo resultados ahora mismo.</div>
+        <div className="system-notice">Actualizando resultados...</div>
       ) : null}
 
       <div className="date-stack">

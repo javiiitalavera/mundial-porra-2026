@@ -39,15 +39,18 @@ export function MatchCard({
           <strong>{names.length}</strong>
         </summary>
         <div className="pick-panel">
-          <div className="pick-panel-title">Han puesto {pick}</div>
+          <div className="pick-panel-title">Han apostado por el {pick}</div>
           <div className="pick-names">{names.join(", ")}</div>
         </div>
       </details>
     );
   };
 
+  const correct = actual ? predictions.filter((item) => item.pick === actual).map((item) => item.player) : [];
+  const wrong = actual ? predictions.filter((item) => item.pick !== actual).map((item) => item.player) : [];
+
   return (
-    <article className={featured ? "match-card featured" : "match-card"}>
+    <article className={featured ? "match-card featured v8-match-card" : "match-card v8-match-card"}>
       <div className="match-topline">
         <div className="match-kicker">
           <span>{formatMatchDate(match.date)}</span>
@@ -75,6 +78,19 @@ export function MatchCard({
         {renderPick("X")}
         {renderPick("2")}
       </div>
+
+      {actual && result?.status === "FINISHED" ? (
+        <div className="v8-result-people">
+          <div>
+            <strong>Acertaron</strong>
+            <span>{correct.length ? correct.join(", ") : "Nadie"}</span>
+          </div>
+          <div>
+            <strong>Fallaron</strong>
+            <span>{wrong.length ? wrong.join(", ") : "Nadie"}</span>
+          </div>
+        </div>
+      ) : null}
     </article>
   );
 }

@@ -6,6 +6,15 @@ import { getMatches, getNextMatch, getStandings } from "@/lib/scoring";
 
 export const revalidate = 600;
 
+function leaderText(standings: ReturnType<typeof getStandings>, played: number): string {
+  if (played === 0) return "Todos empiezan igual";
+  const top = standings[0]?.points ?? 0;
+  const tied = standings.filter((row) => row.points === top).length;
+  return tied > 1 ? "Empate en cabeza" : "Líder provisional";
+}
+
+const podiumMedals = ["🥇", "🥈", "🥉"];
+
 export default async function HomePage() {
   const payload = await getFootballDataResults();
   const standings = getStandings(payload.results);
@@ -19,7 +28,7 @@ export default async function HomePage() {
     <section className="screen">
       <header className="app-header hero-sport">
         <div>
-          <div className="section-label">Ranking en directo</div>
+          <div className="section-label">⚽ Partido inaugural</div>
           <h1>🏆 Mundial 2026</h1>
           {nextMatch ? (
             <div className="hero-next">
@@ -30,11 +39,10 @@ export default async function HomePage() {
             <p>{played}/{total} partidos puntuados</p>
           )}
         </div>
-        <div className="live-badge">Live</div>
       </header>
 
       {payload.error ? (
-        <div className="system-notice">La API no ha respondido correctamente. Reintentará en la próxima carga.</div>
+        <div className="system-notice">Actualizando resultados...</div>
       ) : null}
 
       {nextMatch ? (
@@ -49,21 +57,23 @@ export default async function HomePage() {
 
       {played === 0 ? (
         <section className="quiet-card">
-          <h2>Todo preparado</h2>
-          <p>La clasificación empezará a moverse en cuanto finalice el primer partido.</p>
+          <h2>Todo listo.</h2>
+          <p>La clasificación empezará a moverse cuando termine el primer partido.</p>
         </section>
       ) : null}
 
       <section className="block">
         <div className="block-heading">
-          <h2>Ranking</h2>
-          <span>1 punto por acierto</span>
+          <h2>Clasificación</h2>
+          <span>1 punto por acertar</span>
         </div>
+
+        <div className="leader-note">{leaderText(standings, played)}</div>
 
         <div className="podium">
           {podium.map((row, index) => (
             <a key={row.player} href={`/pronosticos/${encodeURIComponent(row.player)}`} className={`podium-card rank-${index + 1}`}>
-              <div className="podium-top">#{index + 1}</div>
+              <div className="podium-top">{podiumMedals[index]}</div>
               <div className="podium-name">{row.player}</div>
               <div className="podium-score">{row.points}</div>
               <div className="muted">{row.played === 0 ? "Salida" : `${row.correct}/${row.played} · ${row.percentage}%`}</div>

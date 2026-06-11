@@ -908,3 +908,108 @@ body {
   }
 }
 
+/* Sports polish: typography, classification and non-technical status */
+:root {
+  --bg: #fff5d8;
+  --surface-soft: #fff9ec;
+  --gold: #ffb31a;
+  --gold-soft: #ffefbd;
+}
+
+html,
+body {
+  font-family:
+    "Nunito",
+    ui-rounded,
+    "Avenir Next",
+    "SF Pro Rounded",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+}
+
+.app-header h1,
+.page-header h1,
+.block-heading h2,
+.date-title h2,
+.quiet-card h2,
+.podium-name,
+.team {
+  font-family:
+    "Nunito",
+    ui-rounded,
+    "Avenir Next",
+    "SF Pro Rounded",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+}
+
+.app-header h1,
+.page-header h1 {
+  font-weight: 850;
+  letter-spacing: -0.045em;
+}
+
+.live-badge {
+  display: none;
+}
+
+.system-notice {
+  background: #fff3c9;
+  border-color: #f0d17c;
+  color: #8a5b00;
+}
+
+.podium-card {
+  grid-template-columns: 54px 1fr auto;
+}
+
+.podium-card.rank-1 {
+  transform: scale(1.01);
+}
+
+.podium-top {
+  width: 50px;
+  height: 50px;
+  font-size: 25px;
+  border-radius: 18px;
+  background: var(--gold-soft);
+  border-color: #f1cf72;
+}
+
+.podium-name {
+  font-size: 20px;
+  font-weight: 850;
+}
+
+.podium-score {
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.standing-position {
+  font-size: 18px;
+  text-align: center;
+}
+
+.hero-next div {
+  font-weight: 850;
+}
+
+.leader-note {
+  display: inline-flex;
+  align-items: center;
+  margin: -2px 0 12px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: #8a5b00;
+  font-size: 13px;
+  font-weight: 850;
+}
+

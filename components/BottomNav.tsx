@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const items = [
-  { href: "/", label: "Ranking" },
-  { href: "/partidos", label: "Partidos" },
+  { href: "/", label: "Clasificación" },
+  { href: "/partidos", label: "Calendario" },
   { href: "/pronosticos", label: "Quinielas" },
   { href: "/instalar", label: "Instalar" }
 ];

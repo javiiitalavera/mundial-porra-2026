@@ -908,14 +908,13 @@ body {
   }
 }
 
-/* UI consistency pass */
+/* Surgical layout fix: width, tabs and consistent pages */
 :root {
   --app-bg: #fff4d8;
-  --app-surface: rgba(255, 255, 255, 0.82);
-  --app-surface-strong: #fffdf7;
-  --app-border: rgba(31, 24, 12, 0.12);
+  --app-card: rgba(255, 255, 255, 0.86);
+  --app-border: rgba(25, 20, 12, 0.11);
   --app-text: #17130c;
-  --app-muted: #7f725f;
+  --app-muted: #7d705f;
   --app-accent: #ffb21a;
   --app-accent-soft: #fff0c2;
 }
@@ -928,46 +927,48 @@ body {
 }
 
 .screen {
+  width: 100%;
   max-width: 520px;
   margin: 0 auto;
-  padding: 22px 24px 116px;
+  padding: 18px 14px 112px;
+  box-sizing: border-box;
 }
 
 .page-header,
 .app-header {
-  padding: 10px 0 18px;
   margin: 0;
+  padding: 8px 0 16px;
   border: 0;
   background: transparent;
   box-shadow: none;
 }
 
 .section-label {
-  color: #9a6a00;
-  font-size: 13px;
+  color: #946400;
+  font-size: 12px;
   line-height: 1.2;
   font-weight: 800;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .page-header h1,
 .app-header h1 {
-  margin: 6px 0 0;
+  margin: 7px 0 0;
   color: var(--app-text);
-  font-size: clamp(40px, 10vw, 54px);
+  font-size: clamp(38px, 10vw, 50px);
   line-height: 0.98;
-  font-weight: 850;
-  letter-spacing: -0.055em;
+  font-weight: 820;
+  letter-spacing: -0.05em;
 }
 
 .page-header p,
 .app-header p {
-  margin: 10px 0 0;
+  margin: 9px 0 0;
   color: var(--app-muted);
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.35;
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .block,
@@ -977,57 +978,81 @@ body {
 .standing-row,
 .last-result-card {
   border: 1px solid var(--app-border);
-  background: var(--app-surface);
-  box-shadow: 0 14px 38px rgba(58, 42, 13, 0.07);
+  background: var(--app-card);
+  box-shadow: 0 10px 28px rgba(58, 42, 13, 0.06);
 }
 
 .block {
-  margin-top: 16px;
-  padding: 16px;
-  border-radius: 26px;
-}
-
-.block-heading {
-  margin-bottom: 14px;
-}
-
-.block-heading h2,
-.date-title h2,
-.quiet-card h2 {
-  color: var(--app-text);
-  font-size: 28px;
-  line-height: 1.05;
-  font-weight: 850;
-  letter-spacing: -0.045em;
-}
-
-.block-heading span,
-.date-title span,
-.muted {
-  color: var(--app-muted);
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 24px;
 }
 
 .classification-only-block {
-  margin-top: 14px;
+  margin-top: 12px;
+}
+
+.podium {
+  display: grid;
+  gap: 10px;
+}
+
+.podium-card {
+  min-height: 72px;
+  padding: 10px 12px;
+  border-radius: 22px;
+}
+
+.podium-top {
+  width: 46px;
+  height: 46px;
+  font-size: 21px;
+}
+
+.podium-name,
+.standing-name,
+.player-name,
+.team {
+  color: var(--app-text);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.podium-score {
+  font-weight: 850;
+}
+
+.standing-row {
+  min-height: 68px;
+  padding: 12px;
+  border-radius: 20px;
+}
+
+.standing-position {
+  min-width: 34px;
+}
+
+.standing-points strong {
+  font-size: 30px;
 }
 
 .last-result-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-top: 4px;
-  padding: 16px 18px;
-  border-radius: 24px;
+  gap: 14px;
+  margin-top: 2px;
+  padding: 14px 16px;
+  border-radius: 22px;
 }
 
 .last-result-card h2 {
   margin: 5px 0 3px;
   color: var(--app-text);
-  font-size: 24px;
+  font-size: 23px;
   line-height: 1.05;
-  font-weight: 850;
-  letter-spacing: -0.04em;
+  font-weight: 820;
+  letter-spacing: -0.035em;
 }
 
 .last-result-card p {
@@ -1039,57 +1064,76 @@ body {
 
 .last-result-card strong {
   flex: 0 0 auto;
-  padding: 12px 14px;
-  border-radius: 18px;
+  padding: 10px 12px;
+  border-radius: 16px;
   background: var(--app-text);
   color: #fff7df;
-  font-size: 22px;
+  font-size: 21px;
   line-height: 1;
   font-weight: 850;
-  letter-spacing: -0.04em;
-}
-
-.podium {
-  display: grid;
-  gap: 10px;
-}
-
-.podium-card {
-  min-height: 78px;
-  padding: 12px;
-  border-radius: 24px;
-}
-
-.podium-top {
-  font-size: 22px;
-}
-
-.podium-name,
-.standing-name,
-.player-name,
-.team {
-  color: var(--app-text);
-  font-weight: 800;
   letter-spacing: -0.035em;
 }
 
-.podium-score {
-  font-weight: 850;
+.block-heading {
+  margin-bottom: 12px;
 }
 
-.system-notice {
-  margin-top: 4px;
-  border: 1px solid rgba(154, 106, 0, 0.18);
+.block-heading h2,
+.date-title h2,
+.quiet-card h2 {
+  color: var(--app-text);
+  font-size: 30px;
+  line-height: 1.05;
+  font-weight: 820;
+  letter-spacing: -0.04em;
+}
+
+.block-heading span,
+.date-title span,
+.muted {
+  color: var(--app-muted);
+}
+
+.match-card {
+  padding: 16px;
+  border-radius: 24px;
+}
+
+.match-topline {
+  margin-bottom: 18px;
+}
+
+.match-main {
+  margin-bottom: 12px;
+}
+
+.team {
+  font-size: clamp(24px, 6vw, 32px);
+}
+
+.score {
+  min-width: 54px;
+  min-height: 48px;
+}
+
+.match-time {
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+.pick-row {
+  gap: 8px;
+}
+
+.pick-button {
+  min-height: 44px;
+  padding: 10px 14px;
   border-radius: 18px;
-  background: var(--app-accent-soft);
-  color: #8a5b00;
-  font-size: 14px;
-  font-weight: 750;
 }
 
-.date-stack,
-.player-list {
-  margin-top: 14px;
+.player-list,
+.date-stack {
+  margin-top: 12px;
 }
 
 .date-section {
@@ -1100,14 +1144,45 @@ body {
   margin-top: 0;
 }
 
+.system-notice {
+  margin-top: 2px;
+  border: 1px solid rgba(154, 106, 0, 0.18);
+  border-radius: 18px;
+  background: var(--app-accent-soft);
+  color: #8a5b00;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+/* Bottom nav: keep full labels but avoid squeezing */
 .bottom-nav {
-  border-top-color: var(--app-border);
-  background: rgba(255, 250, 237, 0.92);
+  left: 10px !important;
+  right: 10px !important;
+  width: auto !important;
+  max-width: none !important;
+  display: flex;
+  gap: 2px;
+  padding: 6px;
+  border-top: 1px solid var(--app-border);
+  border-radius: 999px;
+  background: rgba(255, 250, 237, 0.94);
+  box-shadow: 0 10px 34px rgba(50, 35, 9, 0.12);
+  backdrop-filter: blur(18px);
+  box-sizing: border-box;
 }
 
 .bottom-nav a {
-  font-size: 15px;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 12px 2px;
+  border-radius: 999px;
+  color: var(--app-muted);
+  font-size: clamp(12px, 3.25vw, 14px);
+  line-height: 1;
   font-weight: 800;
+  text-align: center;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
 }
 
 .bottom-nav a.active {
@@ -1115,29 +1190,34 @@ body {
   color: var(--app-text);
 }
 
+.live-badge,
+.leader-note {
+  display: none !important;
+}
+
 @media (max-width: 390px) {
   .screen {
-    padding-left: 18px;
-    padding-right: 18px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .page-header h1,
   .app-header h1 {
-    font-size: 40px;
+    font-size: 38px;
   }
 
-  .block-heading h2,
-  .date-title h2,
-  .quiet-card h2 {
-    font-size: 26px;
+  .page-header p,
+  .app-header p {
+    font-size: 16px;
   }
 
-  .last-result-card h2 {
-    font-size: 22px;
+  .bottom-nav {
+    left: 8px !important;
+    right: 8px !important;
   }
 
-  .last-result-card strong {
-    font-size: 20px;
+  .bottom-nav a {
+    font-size: 12px;
   }
 }
 

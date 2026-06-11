@@ -1,0 +1,506 @@
+[
+  {
+    "id": "m01",
+    "home": "México",
+    "away": "Sudáfrica",
+    "label": "México - Sudáfrica",
+    "order": 1
+  },
+  {
+    "id": "m02",
+    "home": "Corea del Sur",
+    "away": "República Checa",
+    "label": "Corea del Sur - República Checa",
+    "order": 2
+  },
+  {
+    "id": "m03",
+    "home": "Canadá",
+    "away": "Bosnia y Herzegovina",
+    "label": "Canadá - Bosnia y Herzegovina",
+    "order": 3
+  },
+  {
+    "id": "m04",
+    "home": "Estados Unidos",
+    "away": "Paraguay",
+    "label": "Estados Unidos - Paraguay",
+    "order": 4
+  },
+  {
+    "id": "m05",
+    "home": "Catar",
+    "away": "Suiza",
+    "label": "Catar - Suiza",
+    "order": 5
+  },
+  {
+    "id": "m06",
+    "home": "Brasil",
+    "away": "Marruecos",
+    "label": "Brasil - Marruecos",
+    "order": 6
+  },
+  {
+    "id": "m07",
+    "home": "Haití",
+    "away": "Escocia",
+    "label": "Haití - Escocia",
+    "order": 7
+  },
+  {
+    "id": "m08",
+    "home": "Australia",
+    "away": "Turquía",
+    "label": "Australia - Turquía",
+    "order": 8
+  },
+  {
+    "id": "m09",
+    "home": "Alemania",
+    "away": "Curazao",
+    "label": "Alemania - Curazao",
+    "order": 9
+  },
+  {
+    "id": "m10",
+    "home": "Países Bajos",
+    "away": "Japón",
+    "label": "Países Bajos - Japón",
+    "order": 10
+  },
+  {
+    "id": "m11",
+    "home": "Costa de Marfil",
+    "away": "Ecuador",
+    "label": "Costa de Marfil - Ecuador",
+    "order": 11
+  },
+  {
+    "id": "m12",
+    "home": "Suecia",
+    "away": "Túnez",
+    "label": "Suecia - Túnez",
+    "order": 12
+  },
+  {
+    "id": "m13",
+    "home": "España",
+    "away": "Cabo Verde",
+    "label": "España - Cabo Verde",
+    "order": 13
+  },
+  {
+    "id": "m14",
+    "home": "Bélgica",
+    "away": "Egipto",
+    "label": "Bélgica - Egipto",
+    "order": 14
+  },
+  {
+    "id": "m15",
+    "home": "Arabia Saudí",
+    "away": "Uruguay",
+    "label": "Arabia Saudí - Uruguay",
+    "order": 15
+  },
+  {
+    "id": "m16",
+    "home": "Irán",
+    "away": "Nueva Zelanda",
+    "label": "Irán - Nueva Zelanda",
+    "order": 16
+  },
+  {
+    "id": "m17",
+    "home": "Francia",
+    "away": "Senegal",
+    "label": "Francia - Senegal",
+    "order": 17
+  },
+  {
+    "id": "m18",
+    "home": "Irak",
+    "away": "Noruega",
+    "label": "Irak - Noruega",
+    "order": 18
+  },
+  {
+    "id": "m19",
+    "home": "Argentina",
+    "away": "Argelia",
+    "label": "Argentina - Argelia",
+    "order": 19
+  },
+  {
+    "id": "m20",
+    "home": "Austria",
+    "away": "Jordania",
+    "label": "Austria - Jordania",
+    "order": 20
+  },
+  {
+    "id": "m21",
+    "home": "Portugal",
+    "away": "RD Congo",
+    "label": "Portugal - RD Congo",
+    "order": 21
+  },
+  {
+    "id": "m22",
+    "home": "Inglaterra",
+    "away": "Croacia",
+    "label": "Inglaterra - Croacia",
+    "order": 22
+  },
+  {
+    "id": "m23",
+    "home": "Ghana",
+    "away": "Panamá",
+    "label": "Ghana - Panamá",
+    "order": 23
+  },
+  {
+    "id": "m24",
+    "home": "Uzbekistán",
+    "away": "Colombia",
+    "label": "Uzbekistán - Colombia",
+    "order": 24
+  },
+  {
+    "id": "m25",
+    "home": "República Checa",
+    "away": "Sudáfrica",
+    "label": "República Checa - Sudáfrica",
+    "order": 25
+  },
+  {
+    "id": "m26",
+    "home": "Suiza",
+    "away": "Bosnia y Herzegovina",
+    "label": "Suiza - Bosnia y Herzegovina",
+    "order": 26
+  },
+  {
+    "id": "m27",
+    "home": "Canadá",
+    "away": "Catar",
+    "label": "Canadá - Catar",
+    "order": 27
+  },
+  {
+    "id": "m28",
+    "home": "México",
+    "away": "Corea del Sur",
+    "label": "México - Corea del Sur",
+    "order": 28
+  },
+  {
+    "id": "m29",
+    "home": "Estados Unidos",
+    "away": "Australia",
+    "label": "Estados Unidos - Australia",
+    "order": 29
+  },
+  {
+    "id": "m30",
+    "home": "Escocia",
+    "away": "Marruecos",
+    "label": "Escocia - Marruecos",
+    "order": 30
+  },
+  {
+    "id": "m31",
+    "home": "Brasil",
+    "away": "Haití",
+    "label": "Brasil - Haití",
+    "order": 31
+  },
+  {
+    "id": "m32",
+    "home": "Turquía",
+    "away": "Paraguay",
+    "label": "Turquía - Paraguay",
+    "order": 32
+  },
+  {
+    "id": "m33",
+    "home": "Países Bajos",
+    "away": "Suecia",
+    "label": "Países Bajos - Suecia",
+    "order": 33
+  },
+  {
+    "id": "m34",
+    "home": "Alemania",
+    "away": "Costa de Marfil",
+    "label": "Alemania - Costa de Marfil",
+    "order": 34
+  },
+  {
+    "id": "m35",
+    "home": "Ecuador",
+    "away": "Curazao",
+    "label": "Ecuador - Curazao",
+    "order": 35
+  },
+  {
+    "id": "m36",
+    "home": "Túnez",
+    "away": "Japón",
+    "label": "Túnez - Japón",
+    "order": 36
+  },
+  {
+    "id": "m37",
+    "home": "España",
+    "away": "Arabia Saudí",
+    "label": "España - Arabia Saudí",
+    "order": 37
+  },
+  {
+    "id": "m38",
+    "home": "Bélgica",
+    "away": "Irán",
+    "label": "Bélgica - Irán",
+    "order": 38
+  },
+  {
+    "id": "m39",
+    "home": "Uruguay",
+    "away": "Cabo Verde",
+    "label": "Uruguay - Cabo Verde",
+    "order": 39
+  },
+  {
+    "id": "m40",
+    "home": "Nueva Zelanda",
+    "away": "Egipto",
+    "label": "Nueva Zelanda - Egipto",
+    "order": 40
+  },
+  {
+    "id": "m41",
+    "home": "Argentina",
+    "away": "Austria",
+    "label": "Argentina - Austria",
+    "order": 41
+  },
+  {
+    "id": "m42",
+    "home": "Francia",
+    "away": "Irak",
+    "label": "Francia - Irak",
+    "order": 42
+  },
+  {
+    "id": "m43",
+    "home": "Noruega",
+    "away": "Senegal",
+    "label": "Noruega - Senegal",
+    "order": 43
+  },
+  {
+    "id": "m44",
+    "home": "Jordania",
+    "away": "Argelia",
+    "label": "Jordania - Argelia",
+    "order": 44
+  },
+  {
+    "id": "m45",
+    "home": "Portugal",
+    "away": "Uzbekistán",
+    "label": "Portugal - Uzbekistán",
+    "order": 45
+  },
+  {
+    "id": "m46",
+    "home": "Inglaterra",
+    "away": "Ghana",
+    "label": "Inglaterra - Ghana",
+    "order": 46
+  },
+  {
+    "id": "m47",
+    "home": "Panamá",
+    "away": "Croacia",
+    "label": "Panamá - Croacia",
+    "order": 47
+  },
+  {
+    "id": "m48",
+    "home": "Colombia",
+    "away": "RD Congo",
+    "label": "Colombia - RD Congo",
+    "order": 48
+  },
+  {
+    "id": "m49",
+    "home": "Suiza",
+    "away": "Canadá",
+    "label": "Suiza - Canadá",
+    "order": 49
+  },
+  {
+    "id": "m50",
+    "home": "Bosnia y Herzegovina",
+    "away": "Catar",
+    "label": "Bosnia y Herzegovina - Catar",
+    "order": 50
+  },
+  {
+    "id": "m51",
+    "home": "Marruecos",
+    "away": "Haití",
+    "label": "Marruecos - Haití",
+    "order": 51
+  },
+  {
+    "id": "m52",
+    "home": "Escocia",
+    "away": "Brasil",
+    "label": "Escocia - Brasil",
+    "order": 52
+  },
+  {
+    "id": "m53",
+    "home": "Sudáfrica",
+    "away": "Corea del Sur",
+    "label": "Sudáfrica - Corea del Sur",
+    "order": 53
+  },
+  {
+    "id": "m54",
+    "home": "República Checa",
+    "away": "México",
+    "label": "República Checa - México",
+    "order": 54
+  },
+  {
+    "id": "m55",
+    "home": "Curazao",
+    "away": "Costa de Marfil",
+    "label": "Curazao - Costa de Marfil",
+    "order": 55
+  },
+  {
+    "id": "m56",
+    "home": "Ecuador",
+    "away": "Alemania",
+    "label": "Ecuador - Alemania",
+    "order": 56
+  },
+  {
+    "id": "m57",
+    "home": "Túnez",
+    "away": "Países Bajos",
+    "label": "Túnez - Países Bajos",
+    "order": 57
+  },
+  {
+    "id": "m58",
+    "home": "Japón",
+    "away": "Suecia",
+    "label": "Japón - Suecia",
+    "order": 58
+  },
+  {
+    "id": "m59",
+    "home": "Turquía",
+    "away": "Estados Unidos",
+    "label": "Turquía - Estados Unidos",
+    "order": 59
+  },
+  {
+    "id": "m60",
+    "home": "Paraguay",
+    "away": "Australia",
+    "label": "Paraguay - Australia",
+    "order": 60
+  },
+  {
+    "id": "m61",
+    "home": "Noruega",
+    "away": "Francia",
+    "label": "Noruega - Francia",
+    "order": 61
+  },
+  {
+    "id": "m62",
+    "home": "Senegal",
+    "away": "Irak",
+    "label": "Senegal - Irak",
+    "order": 62
+  },
+  {
+    "id": "m63",
+    "home": "Cabo Verde",
+    "away": "Arabia Saudí",
+    "label": "Cabo Verde - Arabia Saudí",
+    "order": 63
+  },
+  {
+    "id": "m64",
+    "home": "Uruguay",
+    "away": "España",
+    "label": "Uruguay - España",
+    "order": 64
+  },
+  {
+    "id": "m65",
+    "home": "Nueva Zelanda",
+    "away": "Bélgica",
+    "label": "Nueva Zelanda - Bélgica",
+    "order": 65
+  },
+  {
+    "id": "m66",
+    "home": "Egipto",
+    "away": "Irán",
+    "label": "Egipto - Irán",
+    "order": 66
+  },
+  {
+    "id": "m67",
+    "home": "Panamá",
+    "away": "Inglaterra",
+    "label": "Panamá - Inglaterra",
+    "order": 67
+  },
+  {
+    "id": "m68",
+    "home": "Croacia",
+    "away": "Ghana",
+    "label": "Croacia - Ghana",
+    "order": 68
+  },
+  {
+    "id": "m69",
+    "home": "Colombia",
+    "away": "Portugal",
+    "label": "Colombia - Portugal",
+    "order": 69
+  },
+  {
+    "id": "m70",
+    "home": "RD Congo",
+    "away": "Uzbekistán",
+    "label": "RD Congo - Uzbekistán",
+    "order": 70
+  },
+  {
+    "id": "m71",
+    "home": "Argelia",
+    "away": "Austria",
+    "label": "Argelia - Austria",
+    "order": 71
+  },
+  {
+    "id": "m72",
+    "home": "Jordania",
+    "away": "Argentina",
+    "label": "Jordania - Argentina",
+    "order": 72
+  }
+]

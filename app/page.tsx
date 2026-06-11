@@ -1,8 +1,9 @@
 import { MatchCard } from "@/components/MatchCard";
 import { StandingCard } from "@/components/StandingCard";
-import { formatStartsIn } from "@/lib/format";
+import { formatStartsIn, resultLabel } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches, getNextMatch, getStandings } from "@/lib/scoring";
+import type { Match, MatchResult } from "@/lib/types";
 
 export const revalidate = 600;
 
@@ -11,6 +12,14 @@ function leaderText(standings: ReturnType<typeof getStandings>, played: number):
   const top = standings[0]?.points ?? 0;
   const tied = standings.filter((row) => row.points === top).length;
   return tied > 1 ? "Empate en cabeza" : "Líder provisional";
+}
+
+function heroStatus(match: Match, result?: MatchResult): string {
+  if (result?.status === "FINISHED") return resultLabel(result);
+  if (result?.status === "LIVE") return result.minute ? `En juego · ${result.minute}'` : "En juego";
+
+  const countdown = formatStartsIn(match.date, match.timeEt);
+  return countdown === "En juego" ? "Pendiente de marcador" : countdown;
 }
 
 const podiumMedals = ["🥇", "🥈", "🥉"];
@@ -26,13 +35,13 @@ export default async function HomePage() {
 
   return (
     <section className="screen">
-      <header className="app-header hero-sport">
+      <header className="app-header hero-sport compact-hero">
         <div>
           <h1>🏆 Mundial 2026</h1>
           {nextMatch ? (
             <div className="hero-next">
               <div>{nextMatch.home} - {nextMatch.away}</div>
-              <span>{formatStartsIn(nextMatch.date, nextMatch.timeEt)}</span>
+              <span>{heroStatus(nextMatch, payload.results[nextMatch.id])}</span>
             </div>
           ) : (
             <p>{played}/{total} partidos puntuados</p>
@@ -45,7 +54,7 @@ export default async function HomePage() {
       ) : null}
 
       {nextMatch ? (
-        <section className="block">
+        <section className="block compact-next-block">
           <div className="block-heading">
             <h2>Próximo partido</h2>
             <span>{played}/{total} puntuados</span>
@@ -54,14 +63,7 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      {played === 0 ? (
-        <section className="quiet-card">
-          <h2>Todo listo.</h2>
-          <p>La clasificación empezará a moverse cuando termine el primer partido.</p>
-        </section>
-      ) : null}
-
-      <section className="block">
+      <section className="block classification-block">
         <div className="block-heading">
           <h2>Clasificación</h2>
           <span>1 punto por acertar</span>

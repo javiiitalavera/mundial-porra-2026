@@ -956,3 +956,125 @@ body {
   display: none !important;
 }
 
+/* Compact home polish */
+.compact-hero {
+  margin-top: 0;
+  margin-bottom: 28px;
+  padding: 0 26px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.compact-hero h1 {
+  font-size: clamp(42px, 10.5vw, 60px);
+  line-height: 0.95;
+  margin-bottom: 18px;
+  letter-spacing: -0.055em;
+}
+
+.compact-hero .hero-next {
+  max-width: 86%;
+  padding: 18px 22px;
+  border: 1px solid rgba(20, 16, 9, 0.09);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 14px 34px rgba(62, 43, 11, 0.07);
+}
+
+.compact-hero .hero-next div {
+  font-size: clamp(26px, 7vw, 38px);
+  line-height: 1.02;
+}
+
+.compact-hero .hero-next span {
+  margin-top: 6px;
+  display: block;
+  color: #c66c00;
+  font-size: clamp(18px, 5vw, 26px);
+  font-weight: 800;
+}
+
+.compact-next-block {
+  margin-top: 0;
+}
+
+.compact-next-block .block-heading,
+.classification-block .block-heading {
+  margin-bottom: 12px;
+}
+
+.compact-next-block .match-card {
+  padding: 16px;
+  border-radius: 24px;
+}
+
+.compact-next-block .match-topline {
+  margin-bottom: 18px;
+}
+
+.compact-next-block .match-main {
+  margin-bottom: 12px;
+}
+
+.compact-next-block .team {
+  font-size: clamp(24px, 6vw, 34px);
+}
+
+.compact-next-block .score {
+  min-width: 54px;
+  min-height: 48px;
+  padding: 8px 12px;
+}
+
+.compact-next-block .match-time {
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+.compact-next-block .pick-row {
+  gap: 8px;
+}
+
+.compact-next-block .pick-button {
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 18px;
+}
+
+.classification-block {
+  margin-top: 24px;
+}
+
+.leader-note {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 390px) {
+  .compact-hero {
+    padding: 0 18px;
+    margin-bottom: 22px;
+  }
+
+  .compact-hero h1 {
+    font-size: 42px;
+  }
+
+  .compact-hero .hero-next {
+    max-width: 92%;
+    padding: 16px 18px;
+  }
+
+  .compact-next-block .match-card {
+    padding: 14px;
+  }
+
+  .compact-next-block .team {
+    font-size: 24px;
+  }
+
+  .compact-next-block .match-time {
+    font-size: 14px;
+  }
+}
+

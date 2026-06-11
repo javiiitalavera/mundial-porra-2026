@@ -76,3 +76,36 @@ export function formatSpainTimeFromEt(timeEt?: string): string {
 
   return `${formattedHour}:${formattedMinute} España${nextDay ? " (+1)" : ""}`;
 }
+
+export function getMatchStartDate(matchDate?: string, timeEt?: string): Date | undefined {
+  if (!matchDate || !timeEt) return undefined;
+
+  const [rawHour, rawMinute = "00"] = timeEt.split(":");
+  const hour = Number(rawHour);
+  const minute = Number(rawMinute);
+
+  if (!Number.isFinite(hour) || !Number.isFinite(minute)) return undefined;
+
+  // En junio/julio, Eastern Time = UTC-4, así que UTC = ET + 4 horas.
+  return new Date(`${matchDate}T${String(hour + 4).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00Z`);
+}
+
+export function formatStartsIn(matchDate?: string, timeEt?: string): string {
+  const start = getMatchStartDate(matchDate, timeEt);
+  if (!start) return "Hora pendiente";
+
+  const diffMs = start.getTime() - Date.now();
+
+  if (diffMs <= -2 * 60 * 60 * 1000) return "Ya jugado";
+  if (diffMs <= 0) return "En juego";
+
+  const totalMinutes = Math.round(diffMs / 60000);
+  const days = Math.floor(totalMinutes / (60 * 24));
+  const hours = Math.floor((totalMinutes - days * 24 * 60) / 60);
+  const minutes = totalMinutes % 60;
+
+  if (days > 0) return `Empieza en ${days}d ${hours}h`;
+  if (hours > 0) return `Empieza en ${hours}h ${minutes}m`;
+  return `Empieza en ${minutes}m`;
+}
+

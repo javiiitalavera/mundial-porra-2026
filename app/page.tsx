@@ -1,5 +1,6 @@
 import { MatchCard } from "@/components/MatchCard";
 import { StandingCard } from "@/components/StandingCard";
+import { formatStartsIn } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches, getNextMatch, getStandings } from "@/lib/scoring";
 
@@ -16,11 +17,18 @@ export default async function HomePage() {
 
   return (
     <section className="screen">
-      <header className="app-header">
+      <header className="app-header hero-sport">
         <div>
-          <div className="section-label">Mundial 2026</div>
-          <h1>Mundial 2026</h1>
-          <p>{played}/{total} partidos puntuados</p>
+          <div className="section-label">Ranking en directo</div>
+          <h1>🏆 Mundial 2026</h1>
+          {nextMatch ? (
+            <div className="hero-next">
+              <div>{nextMatch.home} - {nextMatch.away}</div>
+              <span>{formatStartsIn(nextMatch.date, nextMatch.timeEt)}</span>
+            </div>
+          ) : (
+            <p>{played}/{total} partidos puntuados</p>
+          )}
         </div>
         <div className="live-badge">Live</div>
       </header>
@@ -33,7 +41,7 @@ export default async function HomePage() {
         <section className="block">
           <div className="block-heading">
             <h2>Próximo partido</h2>
-            <span>Actualización automática</span>
+            <span>{played}/{total} puntuados</span>
           </div>
           <MatchCard match={nextMatch} result={payload.results[nextMatch.id]} featured />
         </section>

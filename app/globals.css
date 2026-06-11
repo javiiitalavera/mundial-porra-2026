@@ -867,3 +867,44 @@ body {
   }
 }
 
+/* V7: icono opción B y cabecera deportiva */
+.hero-sport h1 {
+  font-size: 36px;
+  letter-spacing: -0.035em;
+}
+
+.hero-next {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid rgba(44, 37, 25, 0.08);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(77, 54, 13, 0.06);
+}
+
+.hero-next div {
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  font-weight: 820;
+}
+
+.hero-next span {
+  display: inline-block;
+  margin-top: 6px;
+  color: #cf7a00;
+  font-size: 15px;
+  font-weight: 820;
+}
+
+@media (max-width: 390px) {
+  .hero-sport h1 {
+    font-size: 32px;
+  }
+
+  .hero-next div {
+    font-size: 18px;
+  }
+}
+

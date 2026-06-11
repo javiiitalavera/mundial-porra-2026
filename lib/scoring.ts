@@ -2,7 +2,7 @@ import matches from "@/data/matches.json";
 import predictions from "@/data/predictions.json";
 import players from "@/data/players.json";
 import { manualResults } from "@/data/manualResults";
-import type { Match, MatchResult, Pick, Prediction, ScoredPrediction, Standing } from "./types";
+import type { Match, MatchResult, Pick, PlayerSummary, Prediction, ScoredPrediction, Standing } from "./types";
 
 const allMatches = matches as Match[];
 const allPredictions = predictions as Prediction[];
@@ -26,7 +26,10 @@ export function getResults(): Record<string, MatchResult> {
 }
 
 export function getMatches(): Match[] {
-  return allMatches;
+  return [...allMatches].sort((a, b) => {
+    if (a.date !== b.date) return String(a.date).localeCompare(String(b.date));
+    return (a.officialMatchNo ?? a.order) - (b.officialMatchNo ?? b.order);
+  });
 }
 
 export function getPlayers(): string[] {
@@ -35,6 +38,19 @@ export function getPlayers(): string[] {
 
 export function getPredictions(): Prediction[] {
   return allPredictions;
+}
+
+export function getMatchesByDate(): Array<[string, Match[]]> {
+  const grouped = new Map<string, Match[]>();
+
+  for (const match of getMatches()) {
+    const key = match.date ?? "Fecha pendiente";
+    const list = grouped.get(key) ?? [];
+    list.push(match);
+    grouped.set(key, list);
+  }
+
+  return [...grouped.entries()];
 }
 
 export function getScoredPredictions(results = getResults()): ScoredPrediction[] {
@@ -100,10 +116,39 @@ export function getStandings(results = getResults()): Standing[] {
     });
 }
 
+export function getPlayerSummary(player: string, results = getResults()): PlayerSummary {
+  const row = getStandings(results).find((item) => item.player === player) ?? {
+    player,
+    points: 0,
+    played: 0,
+    correct: 0,
+    pending: allMatches.length,
+    percentage: 0,
+  };
+
+  return {
+    ...row,
+    totalPredictions: allMatches.length,
+    wrong: row.played - row.correct,
+  };
+}
+
+export function getPlayerSummaries(results = getResults()): PlayerSummary[] {
+  return allPlayers
+    .map((player) => getPlayerSummary(player, results))
+    .sort((a, b) => {
+      if (b.points !== a.points) return b.points - a.points;
+      return a.player.localeCompare(b.player, "es");
+    });
+}
+
 export function getPlayerPredictions(player: string, results = getResults()): ScoredPrediction[] {
   return getScoredPredictions(results)
     .filter((item) => item.player.toLowerCase() === decodeURIComponent(player).toLowerCase())
-    .sort((a, b) => a.match.order - b.match.order);
+    .sort((a, b) => {
+      if (a.match.date !== b.match.date) return String(a.match.date).localeCompare(String(b.match.date));
+      return (a.match.officialMatchNo ?? a.match.order) - (b.match.officialMatchNo ?? b.match.order);
+    });
 }
 
 export function getMatchPredictions(matchId: string, results = getResults()): ScoredPrediction[] {

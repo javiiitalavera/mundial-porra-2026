@@ -5,8 +5,7 @@ export function BottomNav() {
     <nav className="bottom-nav">
       <Link href="/">Ranking</Link>
       <Link href="/partidos">Partidos</Link>
-      <Link href="/jugadores">Jugadores</Link>
-      <Link href="/admin">Resultados</Link>
+      <Link href="/pronosticos">Pronósticos</Link>
     </nav>
   );
 }

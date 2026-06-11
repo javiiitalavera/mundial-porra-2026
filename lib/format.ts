@@ -15,3 +15,25 @@ export function resultLabel(result?: MatchResult): string {
 export function normalizePlayerForUrl(player: string): string {
   return encodeURIComponent(player);
 }
+
+export function formatMatchDate(date?: string): string {
+  if (!date) return "Fecha pendiente";
+
+  const parsed = new Date(`${date}T12:00:00`);
+  return new Intl.DateTimeFormat("es-ES", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  }).format(parsed);
+}
+
+export function formatLongMatchDate(date?: string): string {
+  if (!date) return "Fecha pendiente";
+
+  const parsed = new Date(`${date}T12:00:00`);
+  return new Intl.DateTimeFormat("es-ES", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  }).format(parsed);
+}

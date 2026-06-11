@@ -1,5 +1,5 @@
+import { formatMatchDate, resultLabel } from "@/lib/format";
 import { getMatchPredictions, signFromResult } from "@/lib/scoring";
-import { resultLabel } from "@/lib/format";
 import type { Match, MatchResult } from "@/lib/types";
 
 export function MatchCard({
@@ -24,8 +24,15 @@ export function MatchCard({
     <article className="match-card">
       <div className="match-top">
         <div>
+          <div className="meta-row">
+            <span>{formatMatchDate(match.date)}</span>
+            <span className="group-chip">Grupo {match.group ?? "—"}</span>
+          </div>
           <div className="match-label">{match.home} - {match.away}</div>
-          <div className="muted">Partido {match.order}</div>
+          <div className="muted">
+            {match.city}
+            {match.timeLocal ? ` · ${match.timeLocal} local` : ""}
+          </div>
         </div>
         <div className={result ? "score done" : "score"}>{resultLabel(result)}</div>
       </div>

@@ -6,6 +6,13 @@ export type Match = {
   away: string;
   label: string;
   order: number;
+  officialMatchNo?: number;
+  group?: string;
+  date?: string;
+  timeEt?: string;
+  timeLocal?: string;
+  venue?: string;
+  city?: string;
 };
 
 export type Prediction = {
@@ -37,4 +44,9 @@ export type Standing = {
   correct: number;
   pending: number;
   percentage: number;
+};
+
+export type PlayerSummary = Standing & {
+  totalPredictions: number;
+  wrong: number;
 };

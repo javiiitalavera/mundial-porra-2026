@@ -6,10 +6,10 @@ export default function AdminPage() {
   return (
     <section>
       <div className="page-header">
-        <h1>Resultados</h1>
+        <h1>Admin</h1>
         <p>
-          Versión inicial: se editan en <code>data/manualResults.ts</code>.
-          Después podemos cambiar esta pantalla por un formulario protegido con PIN.
+          Pantalla oculta para resultados manuales. Por ahora se editan en <code>data/manualResults.ts</code>.
+          Después podemos sustituir esto por un formulario protegido con PIN.
         </p>
       </div>
 
@@ -25,7 +25,7 @@ export default function AdminPage() {
         {matches.map((match) => (
           <article key={match.id} className="admin-row">
             <code>{match.id}</code>
-            <span>{match.label}</span>
+            <span>{match.label} · Grupo {match.group} · {match.date}</span>
           </article>
         ))}
       </div>

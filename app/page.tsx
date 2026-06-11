@@ -1,14 +1,20 @@
 import { StandingCard } from "@/components/StandingCard";
+import { formatDateSection, resultLabel } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches, getStandings } from "@/lib/scoring";
 
 export const revalidate = 600;
 
-function leaderText(standings: ReturnType<typeof getStandings>, played: number): string {
-  if (played === 0) return "Todos empiezan igual";
-  const top = standings[0]?.points ?? 0;
-  const tied = standings.filter((row) => row.points === top).length;
-  return tied > 1 ? "Empate en cabeza" : "Líder provisional";
+type ResultsPayload = Awaited<ReturnType<typeof getFootballDataResults>>;
+
+function getLastFinishedMatch(results: ResultsPayload["results"]) {
+  return getMatches()
+    .filter((match) => results[match.id]?.status === "FINISHED")
+    .sort((a, b) => {
+      const dateA = `${a.date ?? ""}-${String(a.id).padStart(3, "0")}`;
+      const dateB = `${b.date ?? ""}-${String(b.id).padStart(3, "0")}`;
+      return dateB.localeCompare(dateA);
+    })[0];
 }
 
 const podiumMedals = ["🥇", "🥈", "🥉"];
@@ -20,22 +26,33 @@ export default async function HomePage() {
   const total = getMatches().length;
   const podium = standings.slice(0, 3);
   const rest = standings.slice(3);
+  const lastMatch = getLastFinishedMatch(payload.results);
+  const lastResult = lastMatch ? payload.results[lastMatch.id] : undefined;
 
   return (
     <section className="screen">
-      <header className="page-header classification-header">
+      <header className="page-header">
         <div className="section-label">🏆 Mundial 2026</div>
         <h1>Clasificación</h1>
-        <p>{played}/{total} partidos puntuados · 1 punto por acertar</p>
+        <p>{played}/{total} partidos puntuados</p>
       </header>
 
       {payload.error ? (
         <div className="system-notice">Actualizando resultados...</div>
       ) : null}
 
-      <section className="block classification-only-block">
-        <div className="leader-note">{leaderText(standings, played)}</div>
+      {lastMatch && lastResult ? (
+        <section className="last-result-card">
+          <div>
+            <span className="section-label">Último resultado</span>
+            <h2>{lastMatch.home} - {lastMatch.away}</h2>
+            <p>{formatDateSection(lastMatch.date)}</p>
+          </div>
+          <strong>{resultLabel(lastResult)}</strong>
+        </section>
+      ) : null}
 
+      <section className="block classification-only-block">
         <div className="podium">
           {podium.map((row, index) => (
             <a

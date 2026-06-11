@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { normalizePlayerForUrl } from "@/lib/format";
+import { getApiFootballResults } from "@/lib/apiFootball";
 import { getPlayerSummaries } from "@/lib/scoring";
 
-export default function PredictionsPage() {
-  const players = getPlayerSummaries();
+export const dynamic = "force-dynamic";
+
+export default async function PredictionsPage() {
+  const payload = await getApiFootballResults();
+  const players = getPlayerSummaries(payload.results);
 
   return (
     <section>

@@ -1,33 +1,28 @@
-import { getMatches } from "@/lib/scoring";
+import { getApiFootballResults } from "@/lib/apiFootball";
 
-export default function AdminPage() {
-  const matches = getMatches();
+export const dynamic = "force-dynamic";
+
+export default async function AdminPage() {
+  const payload = await getApiFootballResults();
 
   return (
     <section>
       <div className="page-header">
-        <h1>Admin</h1>
-        <p>
-          Pantalla oculta para resultados manuales. Por ahora se editan en <code>data/manualResults.ts</code>.
-          Después podemos sustituir esto por un formulario protegido con PIN.
-        </p>
+        <h1>Estado API</h1>
+        <p>Pantalla oculta para comprobar si API-Football está respondiendo.</p>
       </div>
 
       <div className="code-card">
-        <p>Ejemplo:</p>
-        <pre>{`export const manualResults = {
-  m01: { homeGoals: 2, awayGoals: 1 },
-  m02: { homeGoals: 0, awayGoals: 0 },
-};`}</pre>
+        <p>Fuente: {payload.source}</p>
+        <p>Partidos emparejados: {payload.matchedFixtures}</p>
+        <p>Resultados con marcador: {Object.keys(payload.results).length}</p>
+        <p>Última actualización: {payload.updatedAt}</p>
+        {payload.error ? <p>Error: {payload.error}</p> : null}
       </div>
 
-      <div className="stack">
-        {matches.map((match) => (
-          <article key={match.id} className="admin-row">
-            <code>{match.id}</code>
-            <span>{match.label} · Grupo {match.group} · {match.date}</span>
-          </article>
-        ))}
+      <div className="code-card">
+        <p>Respuesta resumida:</p>
+        <pre>{JSON.stringify(payload, null, 2)}</pre>
       </div>
     </section>
   );

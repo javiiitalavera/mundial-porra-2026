@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatMatchDate, resultLabel } from "@/lib/format";
-import { getPlayerPredictions, getPlayerSummary, getPlayers, getResults } from "@/lib/scoring";
+import { getApiFootballResults } from "@/lib/apiFootball";
+import { getPlayerPredictions, getPlayerSummary, getPlayers } from "@/lib/scoring";
+
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return getPlayers().map((player) => ({ player }));
@@ -15,11 +18,11 @@ export default async function PlayerPredictionPage({
   const { player: rawPlayer } = await params;
   const player = decodeURIComponent(rawPlayer);
 
-  const predictions = getPlayerPredictions(player);
+  const payload = await getApiFootballResults();
+  const predictions = getPlayerPredictions(player, payload.results);
   if (predictions.length === 0) notFound();
 
-  const summary = getPlayerSummary(player);
-  const results = getResults();
+  const summary = getPlayerSummary(player, payload.results);
 
   return (
     <section>
@@ -42,7 +45,7 @@ export default async function PlayerPredictionPage({
                 <span className="group-chip">Grupo {item.match.group ?? "—"}</span>
               </div>
               <div className="match-label">{item.match.label}</div>
-              <div className="muted">Resultado: {resultLabel(results[item.matchId])}</div>
+              <div className="muted">Resultado: {resultLabel(payload.results[item.matchId])}</div>
             </div>
             <div className="prediction-right">
               <span className="chip">{item.pick}</span>

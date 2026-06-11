@@ -1,25 +1,38 @@
 import { MatchCard } from "@/components/MatchCard";
 import { formatLongMatchDate } from "@/lib/format";
-import { getMatchesByDate, getResults } from "@/lib/scoring";
+import { getApiFootballResults } from "@/lib/apiFootball";
+import { getMatches } from "@/lib/scoring";
 
-export default function MatchesPage() {
-  const groupedMatches = getMatchesByDate();
-  const results = getResults();
+export const dynamic = "force-dynamic";
+
+export default async function MatchesPage() {
+  const matches = getMatches();
+  const payload = await getApiFootballResults();
+
+  const grouped = matches.reduce((acc, match) => {
+    const key = match.date ?? "Fecha pendiente";
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(match);
+    return acc;
+  }, {} as Record<string, typeof matches>);
 
   return (
     <section>
       <div className="page-header">
         <h1>Partidos</h1>
-        <p>Calendario de la primera fase, con grupo, fecha y pronósticos 1/X/2.</p>
+        <p>
+          Fecha, grupo, horario local, horario español y pronósticos de la porra.
+          {payload.error ? " La API todavía no está devolviendo resultados." : ""}
+        </p>
       </div>
 
-      <div className="stack">
-        {groupedMatches.map(([date, matches]) => (
+      <div className="date-stack">
+        {Object.entries(grouped).map(([date, dayMatches]) => (
           <section key={date} className="date-section">
-            <h2 className="date-heading">{formatLongMatchDate(date)}</h2>
+            <h2>{formatLongMatchDate(date)}</h2>
             <div className="stack">
-              {matches.map((match) => (
-                <MatchCard key={match.id} match={match} result={results[match.id]} />
+              {dayMatches.map((match) => (
+                <MatchCard key={match.id} match={match} result={payload.results[match.id]} />
               ))}
             </div>
           </section>

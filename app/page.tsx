@@ -1,17 +1,24 @@
 import { StandingCard } from "@/components/StandingCard";
-import { getResults, getStandings } from "@/lib/scoring";
+import { getApiFootballResults } from "@/lib/apiFootball";
+import { getMatches, getStandings } from "@/lib/scoring";
 
-export default function HomePage() {
-  const standings = getStandings();
-  const results = getResults();
-  const played = Object.keys(results).length;
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const payload = await getApiFootballResults();
+  const standings = getStandings(payload.results);
+  const played = Object.keys(payload.results).length;
+  const total = getMatches().length;
 
   return (
     <section>
       <div className="hero">
         <div className="kicker">Mundial 2026</div>
         <h1>Porra primera fase</h1>
-        <p>{played}/72 partidos puntuados</p>
+        <p>
+          {played}/{total} partidos puntuados
+          {payload.error ? " · API pendiente" : ""}
+        </p>
       </div>
 
       <div className="section-title">

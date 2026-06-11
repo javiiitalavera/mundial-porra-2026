@@ -10,16 +10,16 @@ export default async function PredictionsPage() {
   const players = getPlayerSummaries(payload.results);
 
   return (
-    <section className="screen v8-screen">
-      <header className="page-header v8-page-header">
+    <section className="screen">
+      <header className="page-header">
         <div className="section-label">{players.length} participantes</div>
         <h1>Quinielas</h1>
         <p>Consulta la quiniela de cada participante.</p>
       </header>
 
-      <div className="player-list v8-player-list">
+      <div className="player-list">
         {players.map((row) => (
-          <Link key={row.player} href={`/pronosticos/${normalizePlayerForUrl(row.player)}`} className="player-row v8-player-row">
+          <Link key={row.player} href={`/pronosticos/${normalizePlayerForUrl(row.player)}`} className="player-row">
             <div className="avatar">{row.player.slice(0, 1)}</div>
             <div>
               <div className="player-name">{row.player}</div>

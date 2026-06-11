@@ -19,7 +19,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="bottom-nav v8-bottom-nav" aria-label="Navegación principal">
+    <nav className="bottom-nav" aria-label="Navegación principal">
       {items.map((item) => (
         <Link
           key={item.href}

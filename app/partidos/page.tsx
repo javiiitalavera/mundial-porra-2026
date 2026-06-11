@@ -8,7 +8,6 @@ export const revalidate = 600;
 export default async function MatchesPage() {
   const matches = getMatches();
   const payload = await getFootballDataResults();
-  const played = Object.keys(payload.results).length;
 
   const grouped = matches.reduce((acc, match) => {
     const key = match.date ?? "Fecha pendiente";
@@ -18,11 +17,11 @@ export default async function MatchesPage() {
   }, {} as Record<string, typeof matches>);
 
   return (
-    <section className="screen v8-screen">
-      <header className="page-header v8-page-header">
+    <section className="screen">
+      <header className="page-header">
         <div className="section-label">Calendario</div>
-        <h1>Todos los partidos</h1>
-        <p>{matches.length} partidos · {played} puntuados</p>
+        <h1>Calendario</h1>
+        <p>72 partidos. Horarios, grupos y lo que ha puesto cada uno.</p>
       </header>
 
       {payload.error ? (

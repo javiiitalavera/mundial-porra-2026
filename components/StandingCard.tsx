@@ -23,7 +23,7 @@ export function StandingCard({
   return (
     <Link
       href={`/pronosticos/${normalizePlayerForUrl(row.player)}`}
-      className={compact ? "standing-row compact v8-standing-row" : "standing-row v8-standing-row"}
+      className={compact ? "standing-row compact" : "standing-row"}
     >
       <div className="standing-position">{rank}</div>
       <div className="standing-person">

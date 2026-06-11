@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 const items = [
   { href: "/", label: "Ranking" },
   { href: "/partidos", label: "Partidos" },
-  { href: "/pronosticos", label: "Quinielas" }
+  { href: "/pronosticos", label: "Quinielas" },
+  { href: "/instalar", label: "Instalar" }
 ];
 
 function isActive(pathname: string, href: string): boolean {

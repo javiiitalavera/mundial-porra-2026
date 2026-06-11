@@ -655,3 +655,80 @@ pre {
     font-size: 16px;
   }
 }
+
+/* Mobile install page + four-tab navigation */
+.install-hero-card {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 18px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--surface);
+}
+
+.install-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  display: block;
+  box-shadow: 0 10px 24px rgba(33, 28, 20, 0.12);
+}
+
+.install-hero-card h2,
+.install-section h2 {
+  color: var(--ink);
+  font-size: 18px;
+  letter-spacing: -0.03em;
+  font-weight: 760;
+  margin: 0;
+}
+
+.install-hero-card p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.install-section {
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--surface);
+}
+
+.install-steps {
+  margin: 12px 0 0;
+  padding-left: 22px;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.install-steps li + li {
+  margin-top: 6px;
+}
+
+.install-note {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.bottom-nav {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.bottom-nav a {
+  font-size: 12px;
+}
+

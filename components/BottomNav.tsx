@@ -10,7 +10,7 @@ const items = [
   { href: "/instalar", label: "Instalar" }
 ];
 
-function isActive(pathname: string, href: string): boolean {
+function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   return pathname.startsWith(href);
 }

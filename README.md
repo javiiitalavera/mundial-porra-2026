@@ -1,69 +1,111 @@
-# Porra Mundial 2026
+# Mundial 2026 — Porra entre amigos
 
-App móvil en Next.js para la porra del Mundial 2026.
-
-Datos importados desde el PDF: `MUNDIAL 2026 PRONÓSTICOS.pdf`.
+App móvil en Next.js para seguir una porra privada del Mundial 2026.
 
 ## Qué incluye
 
-- 16 jugadores.
-- 72 partidos de la primera fase.
-- 1.152 pronósticos.
+- 16 participantes.
+- 72 partidos de fase de grupos.
+- 1.152 pronósticos importados desde el PDF original.
 - Clasificación automática.
-- Vista de partidos.
-- Vista individual por jugador.
-- Pantalla inicial para introducir resultados manuales editando `data/manualResults.ts`.
-- Ruta preparada para conectar una API real: `/api/live-scores`.
+- Calendario completo con salto al partido actual.
+- Quiniela individual por participante.
+- Resultados automáticos mediante football-data.org.
+- Caché de resultados para no depender de la API en cada visita.
+- Soporte opcional de Redis/Upstash para conservar el último dato válido si la API falla.
 
-## Cómo arrancar en local
+## Variables de entorno
+
+En Vercel:
+
+```bash
+FOOTBALL_DATA_TOKEN
+```
+
+Opcional si se usa Redis/Upstash:
+
+```bash
+UPSTASH_REDIS_REST_URL
+UPSTASH_REDIS_REST_TOKEN
+```
+
+## Desarrollo local
 
 ```bash
 npm install
 npm run dev
 ```
 
-Abre:
+Abrir:
 
 ```bash
 http://localhost:3000
 ```
 
-## Cómo subir a Vercel
+## Build
 
-1. Sube esta carpeta a GitHub.
-2. En Vercel, pulsa **New Project**.
-3. Importa el repositorio.
-4. Framework: **Next.js**.
-5. Deploy.
-
-## Cómo meter resultados ahora mismo
-
-Edita `data/manualResults.ts`.
-
-Ejemplo:
-
-```ts
-export const manualResults = {
-  m01: { homeGoals: 2, awayGoals: 1 },
-  m02: { homeGoals: 0, awayGoals: 0 },
-};
+```bash
+npm run build
 ```
 
-La app recalcula todo automáticamente.
+## Deploy
 
-## Próximos pasos recomendados
+```bash
+git add .
+git commit -m "..."
+git push
+npx vercel --prod
+```
 
-1. Añadir formulario protegido con PIN para meter resultados desde el móvil.
-2. Conectar API real de resultados del Mundial.
-3. Añadir caché para no depender de la API en cada visita.
-4. Añadir jornada actual, rachas, farolillo rojo y compartir ranking por WhatsApp.
+## Resultados
 
-## V4 Premium
+La ruta de resultados es:
 
-Rediseño orientado a móvil:
-- Ranking con estado inicial, próximo partido, podio y lista limpia.
-- Partidos con hora española prioritaria, estado, resultado y desplegable de nombres por 1/X/2.
-- Pronósticos como quiniela individual, sin repetir "pendiente" innecesariamente.
-- Navegación inferior con pestaña activa.
-- Limpieza visual tipo app móvil premium.
+```bash
+/api/results
+```
 
+Devuelve un payload con:
+
+- `results`: resultados ya disponibles.
+- `updatedAt`: hora de última actualización.
+- `matchedFixtures`: partidos emparejados con la API.
+- `rawMatches`: partidos recibidos desde la API.
+- `cache`: origen del dato.
+- `stale`: si se están usando últimos datos disponibles por fallo temporal.
+
+La interfaz no muestra conceptos técnicos al usuario. Solo muestra una pastilla de estado: actualizado, últimos datos disponibles o esperando actualización.
+
+## Estructura
+
+```bash
+app/
+  page.tsx                 # Clasificación
+  partidos/page.tsx        # Calendario
+  pronosticos/page.tsx     # Lista de quinielas
+  pronosticos/[player]/    # Quiniela individual
+  instalar/page.tsx        # Instalación móvil
+  api/results/route.ts     # API interna
+
+components/
+  BottomNav.tsx
+  MatchCard.tsx
+  StandingCard.tsx
+  UpdateStatus.tsx
+
+lib/
+  footballData.ts
+  scoring.ts
+  format.ts
+  lastUpdated.ts
+  types.ts
+
+data/
+  matches.json
+  players.json
+  predictions.json
+```
+
+## Notas
+
+La API externa puede ir con retraso en el plan gratuito. Para una porra privada es suficiente: la app actualiza de forma conservadora y evita quemar el límite de llamadas.

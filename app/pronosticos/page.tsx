@@ -1,9 +1,8 @@
 import Link from "next/link";
+import { UpdateStatus } from "@/components/UpdateStatus";
 import { normalizePlayerForUrl } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getPlayerSummaries } from "@/lib/scoring";
-import { formatUpdatedAt } from "@/lib/lastUpdated";
-import { UpdateStatus } from "@/components/UpdateStatus";
 
 export const revalidate = 600;
 
@@ -16,15 +15,19 @@ export default async function PredictionsPage() {
       <header className="page-header">
         <div className="section-label">{players.length} participantes</div>
         <h1>Quinielas</h1>
-        <p>Consulta la quiniela de cada participante</p>
+        <p>Consulta la quiniela de cada participante.</p>
         <UpdateStatus payload={payload} />
       </header>
 
       <div className="player-list">
         {players.map((row) => (
-          <Link key={row.player} href={`/pronosticos/${normalizePlayerForUrl(row.player)}`} className="player-row">
+          <Link
+            key={row.player}
+            href={`/pronosticos/${normalizePlayerForUrl(row.player)}`}
+            className="player-row"
+          >
             <div className="avatar">{row.player.slice(0, 1)}</div>
-            <div>
+            <div className="player-info">
               <div className="player-name">{row.player}</div>
               <div className="muted">
                 {row.played === 0 ? "Ver quiniela" : `${row.correct} aciertos · ${row.wrong} fallos`}

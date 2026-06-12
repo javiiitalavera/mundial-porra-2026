@@ -12,8 +12,8 @@ function getLastFinishedMatch(results: ResultsPayload["results"]) {
   return getMatches()
     .filter((match) => results[match.id]?.status === "FINISHED")
     .sort((a, b) => {
-      const dateA = `${a.date ?? ""}-${String(a.id).padStart(3, "0")}`;
-      const dateB = `${b.date ?? ""}-${String(b.id).padStart(3, "0")}`;
+      const dateA = `${a.date ?? ""}-${String(a.order).padStart(3, "0")}`;
+      const dateB = `${b.date ?? ""}-${String(b.order).padStart(3, "0")}`;
       return dateB.localeCompare(dateA);
     })[0];
 }
@@ -27,20 +27,16 @@ export default async function HomePage() {
   const lastResult = lastMatch ? payload.results[lastMatch.id] : undefined;
 
   return (
-    <section className="screen final-screen">
-      <header className="page-header final-header">
+    <section className="screen">
+      <header className="page-header">
         <div className="section-label">🏆 Mundial 2026</div>
         <h1>Clasificación</h1>
         <p>{played}/{total} partidos puntuados</p>
         <UpdateStatus payload={payload} />
       </header>
 
-      {payload.error ? (
-        <div className="system-notice">Actualizando resultados...</div>
-      ) : null}
-
       {lastMatch && lastResult ? (
-        <section className="last-result-card final-last-result">
+        <section className="last-result-card">
           <div>
             <span className="section-label">Último resultado</span>
             <h2>{lastMatch.home} - {lastMatch.away}</h2>
@@ -50,9 +46,9 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <section className="final-ranking-list">
+      <section className="ranking-list">
         {standings.map((row, index) => (
-          <StandingCard key={row.player} row={row} position={index + 1} compact />
+          <StandingCard key={row.player} row={row} position={index + 1} />
         ))}
       </section>
     </section>

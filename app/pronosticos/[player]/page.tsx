@@ -2,13 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatDateSection, resultLabel } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
-import { getPlayerPredictions, getPlayerSummary, getPlayers } from "@/lib/scoring";
+import { getPlayerPredictions, getPlayerSummary } from "@/lib/scoring";
 
 export const revalidate = 600;
-
-export function generateStaticParams() {
-  return getPlayers().map((player) => ({ player }));
-}
 
 export default async function PlayerPredictionPage({
   params
@@ -35,11 +31,11 @@ export default async function PlayerPredictionPage({
     <section className="screen">
       <header className="page-header">
         <Link href="/pronosticos" className="back-link">← Quinielas</Link>
-        <div className="section-label">Jugador</div>
+        <div className="section-label">Quiniela de</div>
         <h1>{player}</h1>
         <p>
           {summary.played === 0
-            ? "Quiniela completa"
+            ? "72 pronósticos registrados"
             : `${summary.correct} aciertos · ${summary.wrong} fallos · ${summary.pending} pendientes`}
         </p>
       </header>
@@ -58,6 +54,7 @@ export default async function PlayerPredictionPage({
                     <div className="fixture-name">{item.match.label}</div>
                     <div className="muted">Grupo {item.match.group ?? "—"}</div>
                   </div>
+
                   <div className="prediction-right">
                     <span className="pick-badge">{item.pick}</span>
                     {item.isCorrect === null ? null : item.isCorrect ? (
@@ -65,7 +62,9 @@ export default async function PlayerPredictionPage({
                     ) : (
                       <span className="result-pill ko">0</span>
                     )}
-                    {item.actual ? <span className="muted score-mini">{resultLabel(payload.results[item.matchId])}</span> : null}
+                    {item.actual ? (
+                      <span className="muted score-mini">{resultLabel(payload.results[item.matchId])}</span>
+                    ) : null}
                   </div>
                 </article>
               ))}

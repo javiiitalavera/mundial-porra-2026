@@ -1,25 +1,17 @@
-import { formatUpdatedAt } from "@/lib/lastUpdated";
+import { formatUpdatedAt, formatUpdatedTime } from "@/lib/lastUpdated";
 
-type UpdatePayload = {
+export type UpdateStatusPayload = {
   updatedAt?: string;
   error?: string;
   stale?: boolean;
-  cache?: string;
-  results?: Record<string, unknown>;
 };
 
-function hasAnyResult(payload: UpdatePayload): boolean {
-  return Boolean(payload.results && Object.keys(payload.results).length > 0);
-}
-
-export function UpdateStatus({ payload }: { payload: UpdatePayload }) {
-  const updated = formatUpdatedAt(payload.updatedAt);
-
+export function UpdateStatus({ payload }: { payload: UpdateStatusPayload }) {
   if (!payload.updatedAt) {
     return (
       <div className="update-status neutral">
         <span aria-hidden="true" />
-        <strong>Esperando resultados</strong>
+        <strong>Esperando actualización</strong>
       </div>
     );
   }
@@ -29,17 +21,7 @@ export function UpdateStatus({ payload }: { payload: UpdatePayload }) {
       <div className="update-status warning">
         <span aria-hidden="true" />
         <strong>Últimos datos disponibles</strong>
-        <small>{updated.replace("Actualizado ", "")}</small>
-      </div>
-    );
-  }
-
-  if (!hasAnyResult(payload)) {
-    return (
-      <div className="update-status neutral">
-        <span aria-hidden="true" />
-        <strong>Esperando resultados</strong>
-        <small>{updated.replace("Actualizado ", "")}</small>
+        <small>{formatUpdatedTime(payload.updatedAt)}</small>
       </div>
     );
   }
@@ -47,7 +29,7 @@ export function UpdateStatus({ payload }: { payload: UpdatePayload }) {
   return (
     <div className="update-status ok">
       <span aria-hidden="true" />
-      <strong>{updated}</strong>
+      <strong>{formatUpdatedAt(payload.updatedAt)}</strong>
     </div>
   );
 }

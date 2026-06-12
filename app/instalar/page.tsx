@@ -4,14 +4,14 @@ export default function InstallPage() {
       <header className="page-header">
         <div className="section-label">App móvil</div>
         <h1>Instalar</h1>
-        <p>Añade Mundial 2026 a la pantalla de inicio para abrirla como una app.</p>
+        <p>Añade Mundial 2026 a la pantalla de inicio y ábrela como una app.</p>
       </header>
 
       <div className="install-hero-card">
         <img src="/icon-192.png" alt="Icono Mundial 2026" className="install-icon" />
         <div>
           <h2>Mundial 2026</h2>
-          <p>Ranking, partidos y quinielas siempre a mano.</p>
+          <p>Clasificación, calendario y quinielas siempre a mano.</p>
         </div>
       </div>
 
@@ -19,7 +19,7 @@ export default function InstallPage() {
         <h2>iPhone / iPad</h2>
         <ol className="install-steps">
           <li>Abre esta web en Safari.</li>
-          <li>Toca el botón de compartir.</li>
+          <li>Toca compartir.</li>
           <li>Elige “Añadir a pantalla de inicio”.</li>
           <li>Confirma con “Añadir”.</li>
         </ol>
@@ -30,14 +30,10 @@ export default function InstallPage() {
         <ol className="install-steps">
           <li>Abre esta web en Chrome.</li>
           <li>Toca el menú de tres puntos.</li>
-          <li>Elige “Añadir a pantalla de inicio” o “Instalar aplicación”.</li>
-          <li>Confirma la instalación.</li>
+          <li>Elige “Instalar aplicación” o “Añadir a pantalla de inicio”.</li>
+          <li>Confirma.</li>
         </ol>
       </section>
-
-      <div className="install-note">
-        Si ya tienes la web abierta en el navegador, la app instalada se actualizará sola con los resultados cuando vuelvas a abrirla.
-      </div>
     </section>
   );
 }

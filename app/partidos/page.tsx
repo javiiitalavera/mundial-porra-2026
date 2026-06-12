@@ -26,20 +26,15 @@ export default async function MatchesPage() {
         <h1>Calendario</h1>
         <p>{matches.length} partidos · {played} puntuados</p>
 
-        <div className="calendar-actions">
+        <div className="header-actions">
           <UpdateStatus payload={payload} />
-
           {nextMatch ? (
-            <a className="jump-today-button" href={`#partido-${nextMatch.id}`}>
+            <a className="jump-button" href={`#partido-${nextMatch.id}`}>
               Ver hoy
             </a>
           ) : null}
         </div>
       </header>
-
-      {payload.error ? (
-        <div className="system-notice">Actualizando resultados...</div>
-      ) : null}
 
       <div className="date-stack">
         {Object.entries(grouped).map(([date, dayMatches]) => (
@@ -48,6 +43,7 @@ export default async function MatchesPage() {
               <h2>{formatDateSection(date)}</h2>
               <span>{formatLongMatchDate(date)}</span>
             </div>
+
             <div className="match-stack">
               {dayMatches.map((match) => (
                 <div

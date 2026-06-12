@@ -11,8 +11,7 @@ function statusLabel(result?: MatchResult): string {
 
 export function MatchCard({
   match,
-  result,
-  featured = false
+  result
 }: {
   match: Match;
   result?: MatchResult;
@@ -31,29 +30,30 @@ export function MatchCard({
 
   const renderPick = (pick: Pick) => {
     const names = grouped[pick];
+    const isHit = actual === pick && result?.status === "FINISHED";
 
     return (
       <details className="pick-details">
-        <summary className={actual === pick ? "pick-button is-hit" : "pick-button"}>
+        <summary className={isHit ? "pick-button is-hit" : "pick-button"}>
           <span>{pick}</span>
           <strong>{names.length}</strong>
         </summary>
         <div className="pick-panel">
           <div className="pick-panel-title">Han apostado por el {pick}</div>
-          <div className="pick-names">{names.join(", ")}</div>
+          <div className="pick-names">{names.length ? names.join(", ") : "Nadie"}</div>
         </div>
       </details>
     );
   };
 
   return (
-    <article className={featured ? "match-card featured" : "match-card"}>
+    <article className="match-card">
       <div className="match-topline">
         <div className="match-kicker">
           <span>{formatMatchDate(match.date)}</span>
           <span>Grupo {match.group ?? "—"}</span>
         </div>
-        <span className={result ? "match-state is-done" : "match-state"}>
+        <span className={result?.status === "FINISHED" ? "match-state is-done" : "match-state"}>
           {statusLabel(result)}
         </span>
       </div>

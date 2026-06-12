@@ -6,8 +6,7 @@ const medals = ["🥇", "🥈", "🥉"];
 
 export function StandingCard({
   row,
-  position,
-  compact = false
+  position
 }: {
   row: Standing;
   position: number;
@@ -18,18 +17,20 @@ export function StandingCard({
       ? "Sin partidos puntuados"
       : `${row.correct}/${row.played} aciertos · ${row.percentage}%`;
 
-  const rank = medals[position - 1] ?? position;
-
   return (
     <Link
       href={`/pronosticos/${normalizePlayerForUrl(row.player)}`}
-      className={compact ? "standing-row compact" : "standing-row"}
+      className="standing-row"
     >
-      <div className="standing-position">{rank}</div>
+      <div className="standing-position">
+        {medals[position - 1] ?? position}
+      </div>
+
       <div className="standing-person">
         <div className="standing-name">{row.player}</div>
         <div className="muted">{subtitle}</div>
       </div>
+
       <div className="standing-points">
         <strong>{row.points}</strong>
         <span>pts</span>

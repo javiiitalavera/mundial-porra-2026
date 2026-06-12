@@ -27,3 +27,31 @@ body{min-height:100%;margin:0;background:radial-gradient(circle at 50% -12%,rgba
 .install-hero-card,.install-section{margin-top:12px;padding:14px;border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:var(--shadow)}.install-hero-card{display:flex;align-items:center;gap:12px}.install-icon{width:58px;height:58px;border-radius:18px}.install-hero-card h2,.install-section h2{margin:0 0 4px;color:var(--text-strong);font-size:22px;font-weight:660;letter-spacing:-.035em}.install-hero-card p{margin:0;color:var(--muted);font-size:14px}.install-steps{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:15px;line-height:1.45}
 .bottom-nav{position:fixed;left:50%;bottom:max(10px,env(safe-area-inset-bottom));z-index:100;display:grid;width:min(496px,calc(100vw - 20px));min-height:64px;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:5px;transform:translateX(-50%);border:1px solid var(--line);border-radius:999px;background:rgba(255,252,246,.95);box-shadow:0 10px 28px rgba(40,32,18,.12);backdrop-filter:blur(18px)}.bottom-nav a{display:flex;min-width:0;min-height:54px;align-items:center;justify-content:center;flex-direction:column;gap:3px;padding:0 2px;border-radius:999px;color:var(--muted);font-size:clamp(10px,2.8vw,12px);font-weight:620;letter-spacing:-.01em;line-height:1;text-align:center;text-decoration:none;white-space:nowrap}.nav-icon{font-size:19px;line-height:1;opacity:.75}.bottom-nav a.active{background:linear-gradient(180deg,#ffe2a0,#ffd170);color:var(--text-strong)}.bottom-nav a.active .nav-icon{opacity:1}
 @media(max-width:390px){.screen{padding-right:14px;padding-left:14px}.page-header h1,.app-header h1{font-size:38px}.page-header p,.app-header p{font-size:16px}.match-card{padding:16px}.team{font-size:21px}.score{min-width:52px}.bottom-nav a{font-size:10px}}
+
+/* Bottom nav SVG icons */
+.nav-icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  opacity: 0.72;
+}
+
+.nav-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.05;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bottom-nav a.active .nav-icon {
+  opacity: 1;
+}
+
+.bottom-nav a.active .nav-icon svg {
+  stroke-width: 2.25;
+}
+

@@ -2,6 +2,7 @@ import { StandingCard } from "@/components/StandingCard";
 import { formatDateSection, resultLabel } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches, getStandings } from "@/lib/scoring";
+import { formatUpdatedAt } from "@/lib/lastUpdated";
 
 export const revalidate = 600;
 
@@ -30,7 +31,7 @@ export default async function HomePage() {
       <header className="page-header final-header">
         <div className="section-label">🏆 Mundial 2026</div>
         <h1>Clasificación</h1>
-        <p>{played}/{total} partidos puntuados</p>
+        <p>{played}/{total} partidos puntuados · {formatUpdatedAt(payload.updatedAt)}</p>
       </header>
 
       {payload.error ? (

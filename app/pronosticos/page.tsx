@@ -2,6 +2,7 @@ import Link from "next/link";
 import { normalizePlayerForUrl } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getPlayerSummaries } from "@/lib/scoring";
+import { formatUpdatedAt } from "@/lib/lastUpdated";
 
 export const revalidate = 600;
 
@@ -14,7 +15,7 @@ export default async function PredictionsPage() {
       <header className="page-header">
         <div className="section-label">{players.length} participantes</div>
         <h1>Quinielas</h1>
-        <p>Consulta la quiniela de cada participante.</p>
+        <p>Consulta la quiniela de cada participante · {formatUpdatedAt(payload.updatedAt)}</p>
       </header>
 
       <div className="player-list">

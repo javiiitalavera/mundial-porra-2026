@@ -2,6 +2,7 @@ import { MatchCard } from "@/components/MatchCard";
 import { formatDateSection, formatLongMatchDate } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches } from "@/lib/scoring";
+import { formatUpdatedAt } from "@/lib/lastUpdated";
 
 export const revalidate = 600;
 
@@ -21,7 +22,7 @@ export default async function MatchesPage() {
       <header className="page-header">
         <div className="section-label">Calendario</div>
         <h1>Calendario</h1>
-        <p>72 partidos. Horarios, grupos y lo que ha puesto cada uno.</p>
+        <p>72 partidos · {formatUpdatedAt(payload.updatedAt)}</p>
       </header>
 
       {payload.error ? (

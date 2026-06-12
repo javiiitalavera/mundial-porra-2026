@@ -1274,3 +1274,7 @@ body {
   }
 }
 
+/* Last update text */
+.page-header p {
+  max-width: 100%;
+}

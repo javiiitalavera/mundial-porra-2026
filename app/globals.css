@@ -1278,3 +1278,34 @@ body {
 .page-header p {
   max-width: 100%;
 }
+
+/* Calendar jump to current match */
+html {
+  scroll-behavior: smooth;
+}
+
+.jump-today-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgba(20, 16, 9, 0.12);
+  border-radius: 999px;
+  background: #ffb21a;
+  color: #17130c;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(58, 42, 13, 0.08);
+}
+
+.match-anchor {
+  scroll-margin-top: 18px;
+}
+
+.next-match-anchor .match-card {
+  border-color: rgba(255, 178, 26, 0.75) !important;
+}
+

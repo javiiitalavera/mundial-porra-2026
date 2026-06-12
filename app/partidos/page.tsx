@@ -1,7 +1,7 @@
 import { MatchCard } from "@/components/MatchCard";
 import { formatDateSection, formatLongMatchDate } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
-import { getMatches } from "@/lib/scoring";
+import { getMatches, getNextMatch } from "@/lib/scoring";
 import { formatUpdatedAt } from "@/lib/lastUpdated";
 
 export const revalidate = 600;
@@ -9,6 +9,8 @@ export const revalidate = 600;
 export default async function MatchesPage() {
   const matches = getMatches();
   const payload = await getFootballDataResults();
+  const played = Object.keys(payload.results).length;
+  const nextMatch = getNextMatch(payload.results);
 
   const grouped = matches.reduce((acc, match) => {
     const key = match.date ?? "Fecha pendiente";
@@ -22,7 +24,13 @@ export default async function MatchesPage() {
       <header className="page-header">
         <div className="section-label">Calendario</div>
         <h1>Calendario</h1>
-        <p>72 partidos · {formatUpdatedAt(payload.updatedAt)}</p>
+        <p>{matches.length} partidos · {played} puntuados · {formatUpdatedAt(payload.updatedAt)}</p>
+
+        {nextMatch ? (
+          <a className="jump-today-button" href={`#partido-${nextMatch.id}`}>
+            Ver hoy
+          </a>
+        ) : null}
       </header>
 
       {payload.error ? (
@@ -38,7 +46,13 @@ export default async function MatchesPage() {
             </div>
             <div className="match-stack">
               {dayMatches.map((match) => (
-                <MatchCard key={match.id} match={match} result={payload.results[match.id]} />
+                <div
+                  key={match.id}
+                  id={`partido-${match.id}`}
+                  className={nextMatch?.id === match.id ? "match-anchor next-match-anchor" : "match-anchor"}
+                >
+                  <MatchCard match={match} result={payload.results[match.id]} />
+                </div>
               ))}
             </div>
           </section>

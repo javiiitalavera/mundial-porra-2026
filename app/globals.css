@@ -89,3 +89,18 @@ body{min-height:100%;margin:0;background:radial-gradient(circle at 50% -12%,rgba
   box-shadow: 0 10px 30px rgba(255, 181, 46, 0.11);
 }
 
+/* Live match card in classification */
+.live-result-card {
+  border-color: rgba(19, 138, 85, 0.24);
+  background: linear-gradient(180deg, rgba(232, 246, 239, 0.96), rgba(255, 255, 255, 0.92));
+}
+
+.live-result-card .section-label {
+  color: var(--green);
+}
+
+.live-result-card strong {
+  background: var(--green);
+  color: white;
+}
+

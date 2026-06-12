@@ -1,21 +1,43 @@
-import { StandingCard } from "@/components/StandingCard";
+"import { StandingCard } from "@/components/StandingCard";
 import { UpdateStatus } from "@/components/UpdateStatus";
 import { formatDateSection, resultLabel } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches, getStandings } from "@/lib/scoring";
+import type { Match, MatchResult } from "@/lib/types";
 
 export const revalidate = 600;
 
 type ResultsPayload = Awaited<ReturnType<typeof getFootballDataResults>>;
 
-function getLastFinishedMatch(results: ResultsPayload["results"]) {
-  return getMatches()
+function getFeaturedMatch(results: ResultsPayload["results"]): { match: Match; result: MatchResult; label: string } | null {
+  const matches = getMatches();
+
+  const liveMatch = matches.find((match) => results[match.id]?.status === "LIVE");
+  if (liveMatch) {
+    return {
+      match: liveMatch,
+      result: results[liveMatch.id],
+      label: "En juego"
+    };
+  }
+
+  const finishedMatch = matches
     .filter((match) => results[match.id]?.status === "FINISHED")
     .sort((a, b) => {
       const dateA = `${a.date ?? ""}-${String(a.order).padStart(3, "0")}`;
       const dateB = `${b.date ?? ""}-${String(b.order).padStart(3, "0")}`;
       return dateB.localeCompare(dateA);
     })[0];
+
+  if (finishedMatch) {
+    return {
+      match: finishedMatch,
+      result: results[finishedMatch.id],
+      label: "Último resultado"
+    };
+  }
+
+  return null;
 }
 
 export default async function HomePage() {
@@ -23,8 +45,7 @@ export default async function HomePage() {
   const standings = getStandings(payload.results);
   const played = Object.keys(payload.results).length;
   const total = getMatches().length;
-  const lastMatch = getLastFinishedMatch(payload.results);
-  const lastResult = lastMatch ? payload.results[lastMatch.id] : undefined;
+  const featured = getFeaturedMatch(payload.results);
 
   return (
     <section className="screen">
@@ -35,14 +56,14 @@ export default async function HomePage() {
         <UpdateStatus payload={payload} />
       </header>
 
-      {lastMatch && lastResult ? (
-        <section className="last-result-card">
+      {featured ? (
+        <section className={featured.label === "En juego" ? "last-result-card live-result-card" : "last-result-card"}>
           <div>
-            <span className="section-label">Último resultado</span>
-            <h2>{lastMatch.home} - {lastMatch.away}</h2>
-            <p>{formatDateSection(lastMatch.date)}</p>
+            <span className="section-label">{featured.label}</span>
+            <h2>{featured.match.home} - {featured.match.away}</h2>
+            <p>{formatDateSection(featured.match.date)}</p>
           </div>
-          <strong>{resultLabel(lastResult)}</strong>
+          <strong>{resultLabel(featured.result)}</strong>
         </section>
       ) : null}
 

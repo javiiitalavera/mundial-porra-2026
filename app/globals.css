@@ -1393,3 +1393,34 @@ html {
   }
 }
 
+/* Calendar actions alignment */
+.calendar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  width: 100%;
+}
+
+.calendar-actions .update-status {
+  margin-top: 0;
+}
+
+.calendar-actions .jump-today-button {
+  margin-top: 0;
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 390px) {
+  .calendar-actions {
+    gap: 8px;
+  }
+
+  .calendar-actions .jump-today-button {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+

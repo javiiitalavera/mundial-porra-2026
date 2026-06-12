@@ -1,9 +1,8 @@
 import { MatchCard } from "@/components/MatchCard";
+import { UpdateStatus } from "@/components/UpdateStatus";
 import { formatDateSection, formatLongMatchDate } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches, getNextMatch } from "@/lib/scoring";
-import { formatUpdatedAt } from "@/lib/lastUpdated";
-import { UpdateStatus } from "@/components/UpdateStatus";
 
 export const revalidate = 600;
 
@@ -26,13 +25,16 @@ export default async function MatchesPage() {
         <div className="section-label">Calendario</div>
         <h1>Calendario</h1>
         <p>{matches.length} partidos · {played} puntuados</p>
-        <UpdateStatus payload={payload} />
 
-        {nextMatch ? (
-          <a className="jump-today-button" href={`#partido-${nextMatch.id}`}>
-            Ver hoy
-          </a>
-        ) : null}
+        <div className="calendar-actions">
+          <UpdateStatus payload={payload} />
+
+          {nextMatch ? (
+            <a className="jump-today-button" href={`#partido-${nextMatch.id}`}>
+              Ver hoy
+            </a>
+          ) : null}
+        </div>
       </header>
 
       {payload.error ? (

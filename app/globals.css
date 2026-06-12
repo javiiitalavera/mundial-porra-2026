@@ -55,3 +55,37 @@ body{min-height:100%;margin:0;background:radial-gradient(circle at 50% -12%,rgba
   stroke-width: 2.25;
 }
 
+/* Refresh status and current match target */
+.update-status {
+  appearance: none;
+  cursor: pointer;
+}
+
+.update-status.checking {
+  border-color: rgba(169, 111, 0, 0.18);
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.update-status.checking span {
+  background: var(--warning);
+  animation: updatePulse 0.8s ease-in-out infinite;
+}
+
+@keyframes updatePulse {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
+.next-match-anchor .match-card {
+  border-color: rgba(255, 181, 46, 0.72);
+  box-shadow: 0 10px 30px rgba(255, 181, 46, 0.11);
+}
+

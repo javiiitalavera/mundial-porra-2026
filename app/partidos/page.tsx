@@ -2,7 +2,8 @@ import { MatchCard } from "@/components/MatchCard";
 import { UpdateStatus } from "@/components/UpdateStatus";
 import { formatDateSection, formatLongMatchDate } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
-import { getMatches, getNextMatch } from "@/lib/scoring";
+import { getCurrentOrNextMatch } from "@/lib/matchTiming";
+import { getMatches } from "@/lib/scoring";
 
 export const revalidate = 600;
 
@@ -10,7 +11,7 @@ export default async function MatchesPage() {
   const matches = getMatches();
   const payload = await getFootballDataResults();
   const played = Object.keys(payload.results).length;
-  const nextMatch = getNextMatch(payload.results);
+  const targetMatch = getCurrentOrNextMatch(matches, payload.results);
 
   const grouped = matches.reduce((acc, match) => {
     const key = match.date ?? "Fecha pendiente";
@@ -28,8 +29,9 @@ export default async function MatchesPage() {
 
         <div className="header-actions">
           <UpdateStatus payload={payload} />
-          {nextMatch ? (
-            <a className="jump-button" href={`#partido-${nextMatch.id}`}>
+
+          {targetMatch ? (
+            <a className="jump-button" href={`#partido-${targetMatch.id}`}>
               Ver hoy
             </a>
           ) : null}
@@ -49,7 +51,7 @@ export default async function MatchesPage() {
                 <div
                   key={match.id}
                   id={`partido-${match.id}`}
-                  className={nextMatch?.id === match.id ? "match-anchor next-match-anchor" : "match-anchor"}
+                  className={targetMatch?.id === match.id ? "match-anchor next-match-anchor" : "match-anchor"}
                 >
                   <MatchCard match={match} result={payload.results[match.id]} />
                 </div>

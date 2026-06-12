@@ -1,3 +1,7 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { formatUpdatedAt, formatUpdatedTime } from "@/lib/lastUpdated";
 
 export type UpdateStatusPayload = {
@@ -6,30 +10,99 @@ export type UpdateStatusPayload = {
   stale?: boolean;
 };
 
+const MIN_CHECK_INTERVAL_MS = 60_000;
+const AUTO_CHECK_INTERVAL_MS = 120_000;
+
 export function UpdateStatus({ payload }: { payload: UpdateStatusPayload }) {
+  const router = useRouter();
+  const lastCheckRef = useRef(0);
+  const [checking, setChecking] = useState(false);
+
+  const checkForUpdates = useCallback(
+    async (force = false) => {
+      const now = Date.now();
+
+      if (!force && now - lastCheckRef.current < MIN_CHECK_INTERVAL_MS) {
+        return;
+      }
+
+      lastCheckRef.current = now;
+      setChecking(true);
+
+      try {
+        const response = await fetch(`/api/results?check=${now}`, {
+          cache: "no-store"
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (data?.updatedAt && data.updatedAt !== payload.updatedAt) {
+          router.refresh();
+          return;
+        }
+      } catch {
+        // No enseñamos errores técnicos al usuario.
+      } finally {
+        window.setTimeout(() => setChecking(false), 450);
+      }
+    },
+    [payload.updatedAt, router]
+  );
+
+  useEffect(() => {
+    void checkForUpdates(true);
+
+    const onFocus = () => void checkForUpdates(false);
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") void checkForUpdates(true);
+    };
+
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    const interval = window.setInterval(() => {
+      void checkForUpdates(false);
+    }, AUTO_CHECK_INTERVAL_MS);
+
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.clearInterval(interval);
+    };
+  }, [checkForUpdates]);
+
+  if (checking) {
+    return (
+      <button type="button" className="update-status checking" onClick={() => void checkForUpdates(true)}>
+        <span aria-hidden="true" />
+        <strong>Buscando actualización...</strong>
+      </button>
+    );
+  }
+
   if (!payload.updatedAt) {
     return (
-      <div className="update-status neutral">
+      <button type="button" className="update-status neutral" onClick={() => void checkForUpdates(true)}>
         <span aria-hidden="true" />
         <strong>Esperando actualización</strong>
-      </div>
+      </button>
     );
   }
 
   if (payload.error || payload.stale) {
     return (
-      <div className="update-status warning">
+      <button type="button" className="update-status warning" onClick={() => void checkForUpdates(true)}>
         <span aria-hidden="true" />
         <strong>Últimos datos disponibles</strong>
         <small>{formatUpdatedTime(payload.updatedAt)}</small>
-      </div>
+      </button>
     );
   }
 
   return (
-    <div className="update-status ok">
+    <button type="button" className="update-status ok" onClick={() => void checkForUpdates(true)}>
       <span aria-hidden="true" />
       <strong>{formatUpdatedAt(payload.updatedAt)}</strong>
-    </div>
+    </button>
   );
 }

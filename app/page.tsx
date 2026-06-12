@@ -1,4 +1,4 @@
-"import { StandingCard } from "@/components/StandingCard";
+import { StandingCard } from "@/components/StandingCard";
 import { UpdateStatus } from "@/components/UpdateStatus";
 import { formatDateSection, resultLabel } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";

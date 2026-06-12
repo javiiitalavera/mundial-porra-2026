@@ -3,6 +3,7 @@ import { formatDateSection, formatLongMatchDate } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches, getNextMatch } from "@/lib/scoring";
 import { formatUpdatedAt } from "@/lib/lastUpdated";
+import { UpdateStatus } from "@/components/UpdateStatus";
 
 export const revalidate = 600;
 
@@ -24,7 +25,8 @@ export default async function MatchesPage() {
       <header className="page-header">
         <div className="section-label">Calendario</div>
         <h1>Calendario</h1>
-        <p>{matches.length} partidos · {played} puntuados · {formatUpdatedAt(payload.updatedAt)}</p>
+        <p>{matches.length} partidos · {played} puntuados</p>
+        <UpdateStatus payload={payload} />
 
         {nextMatch ? (
           <a className="jump-today-button" href={`#partido-${nextMatch.id}`}>

@@ -77,6 +77,21 @@ function getRedis(): Redis | null {
 function hasResults(payload: ApiResultsPayload | null): payload is ApiResultsPayload {
   return Boolean(payload && Object.keys(payload.results).length > 0);
 }
+function payloadAgeMs(payload: ApiResultsPayload): number {
+  const timestamp = Date.parse(payload.updatedAt);
+  if (!Number.isFinite(timestamp)) return Number.POSITIVE_INFINITY;
+  return Date.now() - timestamp;
+}
+
+function asCachedPayload(payload: ApiResultsPayload, cache: "memory" | "redis"): ApiResultsPayload {
+  return {
+    ...payload,
+    cache,
+    stale: false,
+    error: undefined
+  };
+}
+
 
 function normalize(value?: string | null): string {
   return (value ?? "")
@@ -191,6 +206,26 @@ function safeEmptyPayload(error: string): ApiResultsPayload {
     stale: true,
     cache: "empty"
   };
+}
+
+async function readFreshPersistentCache(): Promise<ApiResultsPayload | null> {
+  if (hasResults(lastGoodPayload) && payloadAgeMs(lastGoodPayload) < CACHE_MS) {
+    return asCachedPayload(lastGoodPayload, "memory");
+  }
+
+  const redis = getRedis();
+  if (!redis) return null;
+
+  try {
+    const cached = await redis.get<ApiResultsPayload>(REDIS_KEY);
+    if (!hasResults(cached)) return null;
+    if (payloadAgeMs(cached) >= CACHE_MS) return null;
+
+    lastGoodPayload = cached;
+    return asCachedPayload(cached, "redis");
+  } catch {
+    return null;
+  }
 }
 
 async function readPersistentCache(error?: string): Promise<ApiResultsPayload | null> {
@@ -339,10 +374,17 @@ export async function getFootballDataResults(): Promise<ApiResultsPayload> {
   const now = Date.now();
 
   if (memoryCache && memoryCache.expiresAt > now) {
-    return {
-      ...memoryCache.payload,
-      cache: memoryCache.payload.cache ?? "memory"
+    return asCachedPayload(memoryCache.payload, "memory");
+  }
+
+  const cached = await readFreshPersistentCache();
+  if (cached) {
+    memoryCache = {
+      payload: cached,
+      expiresAt: now + CACHE_MS
     };
+
+    return cached;
   }
 
   if (!inFlight) {

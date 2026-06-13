@@ -1,6 +1,6 @@
 import { getFootballDataResults } from "@/lib/footballData";
 
-export const revalidate = 600;
+export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   const payload = await getFootballDataResults();

@@ -4,7 +4,7 @@ import { formatDateSection, resultLabel } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getPlayerPredictions, getPlayerSummary } from "@/lib/scoring";
 
-export const revalidate = 600;
+export const dynamic = "force-dynamic";
 
 export default async function PlayerPredictionPage({
   params

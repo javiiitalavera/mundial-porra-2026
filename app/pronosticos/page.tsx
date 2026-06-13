@@ -4,7 +4,7 @@ import { normalizePlayerForUrl } from "@/lib/format";
 import { getFootballDataResults } from "@/lib/footballData";
 import { getPlayerSummaries } from "@/lib/scoring";
 
-export const revalidate = 600;
+export const dynamic = "force-dynamic";
 
 export default async function PredictionsPage() {
   const payload = await getFootballDataResults();

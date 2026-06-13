@@ -5,7 +5,7 @@ import { getFootballDataResults } from "@/lib/footballData";
 import { getMatches, getStandings } from "@/lib/scoring";
 import type { Match, MatchResult } from "@/lib/types";
 
-export const revalidate = 600;
+export const dynamic = "force-dynamic";
 
 type ResultsPayload = Awaited<ReturnType<typeof getFootballDataResults>>;
 

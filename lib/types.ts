@@ -43,4 +43,5 @@ export type Standing = {
   correct: number;
   pending: number;
   percentage: number;
+  positionDelta?: number;
 };

@@ -82,7 +82,7 @@ export function getScoredPredictions(results: Record<string, MatchResult> = {}):
   });
 }
 
-export function getStandings(results: Record<string, MatchResult> = {}): Standing[] {
+function computeStandings(results: Record<string, MatchResult> = {}): Standing[] {
   const scored = getScoredPredictions(results);
   const table = new Map<string, Standing>();
 
@@ -119,6 +119,36 @@ export function getStandings(results: Record<string, MatchResult> = {}): Standin
       if (b.percentage !== a.percentage) return b.percentage - a.percentage;
       return a.player.localeCompare(b.player, "es");
     });
+}
+
+function playedMatchIds(results: Record<string, MatchResult> = {}): string[] {
+  return allMatches
+    .filter((match) => signFromResult(results[match.id]))
+    .sort((a, b) => a.order - b.order)
+    .map((match) => match.id);
+}
+
+export function getStandings(results: Record<string, MatchResult> = {}): Standing[] {
+  const current = computeStandings(results);
+  const playedIds = playedMatchIds(results);
+
+  if (playedIds.length < 2) return current;
+
+  const previousResults = { ...results };
+  delete previousResults[playedIds[playedIds.length - 1]];
+
+  const previous = computeStandings(previousResults);
+  const previousPosition = new Map(previous.map((row, index) => [row.player, index + 1]));
+
+  return current.map((row, index) => {
+    const currentPosition = index + 1;
+    const oldPosition = previousPosition.get(row.player) ?? currentPosition;
+
+    return {
+      ...row,
+      positionDelta: oldPosition - currentPosition
+    };
+  });
 }
 
 export function getPlayerPredictions(

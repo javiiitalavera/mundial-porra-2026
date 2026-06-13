@@ -4,6 +4,20 @@ import { normalizePlayerForUrl } from "@/lib/format";
 
 const medals = ["🥇", "🥈", "🥉"];
 
+function PositionDelta({ delta }: { delta?: number }) {
+  if (typeof delta !== "number") return null;
+
+  if (delta > 0) {
+    return <span className="position-delta up">↑{delta}</span>;
+  }
+
+  if (delta < 0) {
+    return <span className="position-delta down">↓{Math.abs(delta)}</span>;
+  }
+
+  return <span className="position-delta same">=</span>;
+}
+
 export function StandingCard({
   row,
   position
@@ -34,6 +48,7 @@ export function StandingCard({
       <div className="standing-points">
         <strong>{row.points}</strong>
         <span>pts</span>
+        <PositionDelta delta={row.positionDelta} />
       </div>
     </Link>
   );

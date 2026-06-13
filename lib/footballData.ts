@@ -1,5 +1,5 @@
 import { Redis } from "@upstash/redis";
-import matchesJson from "@/data/matches.json"; import { manualResults } from "@/data/manualResults";
+import matchesJson from "@/data/matches.json";
 import type { Match, MatchResult } from "@/lib/types";
 
 const API_URL = "https://api.football-data.org/v4/competitions/WC/matches";
@@ -51,7 +51,7 @@ export type ApiResultsPayload = {
   matchedFixtures: number;
   rawMatches: number;
   stale?: boolean;
-  cache?: "fresh" | "memory" | "redis" | "manual" | "empty";
+  cache?: "fresh" | "memory" | "redis" | "empty";
 };
 
 const matches = matchesJson as Match[];
@@ -67,6 +67,10 @@ function getRedis(): Redis | null {
   if (!url || !token) return null;
 
   return new Redis({ url, token });
+}
+
+function hasResults(payload: ApiResultsPayload | null): payload is ApiResultsPayload {
+  return Boolean(payload && Object.keys(payload.results).length > 0);
 }
 
 function normalize(value?: string | null): string {
@@ -145,7 +149,7 @@ function sameDate(apiDateTime: string, matchDate?: string): boolean {
 
 function matchStatus(status: string): MatchResult["status"] {
   if (["FINISHED", "AWARDED"].includes(status)) return "FINISHED";
-  if (["IN_PLAY", "PAUSED"].includes(status)) return "LIVE";
+  if (["IN_PLAY", "PAUSED", "LIVE"].includes(status)) return "LIVE";
   return "SCHEDULED";
 }
 
@@ -179,12 +183,13 @@ function safeEmptyPayload(error: string): ApiResultsPayload {
     matchedFixtures: 0,
     rawMatches: 0,
     error,
+    stale: true,
     cache: "empty"
   };
 }
 
 async function readPersistentCache(error?: string): Promise<ApiResultsPayload | null> {
-  if (lastGoodPayload) {
+  if (hasResults(lastGoodPayload)) {
     return {
       ...lastGoodPayload,
       stale: true,
@@ -198,7 +203,7 @@ async function readPersistentCache(error?: string): Promise<ApiResultsPayload | 
 
   try {
     const cached = await redis.get<ApiResultsPayload>(REDIS_KEY);
-    if (!cached) return null;
+    if (!hasResults(cached)) return null;
 
     lastGoodPayload = cached;
 
@@ -214,6 +219,8 @@ async function readPersistentCache(error?: string): Promise<ApiResultsPayload | 
 }
 
 async function writePersistentCache(payload: ApiResultsPayload): Promise<void> {
+  if (!hasResults(payload)) return;
+
   lastGoodPayload = payload;
 
   const redis = getRedis();
@@ -224,6 +231,20 @@ async function writePersistentCache(payload: ApiResultsPayload): Promise<void> {
   } catch {
     // No rompemos la app si Redis falla.
   }
+}
+
+function resultFromFixture(match: Match, fixture: FootballDataMatch, direction: "direct" | "reverse"): MatchResult | null {
+  const rawHome = direction === "direct" ? fixture.score.fullTime.home : fixture.score.fullTime.away;
+  const rawAway = direction === "direct" ? fixture.score.fullTime.away : fixture.score.fullTime.home;
+
+  if (typeof rawHome !== "number" || typeof rawAway !== "number") return null;
+
+  return {
+    homeGoals: rawHome,
+    awayGoals: rawAway,
+    status: matchStatus(fixture.status),
+    updatedAt: new Date().toISOString()
+  };
 }
 
 async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
@@ -241,9 +262,7 @@ async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
       headers: {
         "X-Auth-Token": token
       },
-      next: {
-        revalidate: CACHE_SECONDS
-      }
+      cache: "no-store"
     });
 
     const data = (await response.json()) as FootballDataResponse;
@@ -255,6 +274,13 @@ async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
     }
 
     const apiMatches = data.matches ?? [];
+
+    if (apiMatches.length === 0) {
+      const message = "football-data no devolvió partidos.";
+      const cached = await readPersistentCache(message);
+      return cached ?? safeEmptyPayload(message);
+    }
+
     const results: Record<string, MatchResult> = {};
     let matchedFixtures = 0;
 
@@ -263,22 +289,26 @@ async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
         .map((fixture) => ({ fixture, direction: matchFixture(match, fixture) }))
         .find((item) => item.direction !== null);
 
-      if (!found) continue;
+      if (!found || !found.direction) continue;
 
       matchedFixtures += 1;
 
-      const { fixture, direction } = found;
-      const rawHome = direction === "direct" ? fixture.score.fullTime.home : fixture.score.fullTime.away;
-      const rawAway = direction === "direct" ? fixture.score.fullTime.away : fixture.score.fullTime.home;
+      const result = resultFromFixture(match, found.fixture, found.direction);
+      if (!result) continue;
 
-      if (typeof rawHome !== "number" || typeof rawAway !== "number") continue;
+      results[match.id] = result;
+    }
 
-      results[match.id] = {
-        homeGoals: rawHome,
-        awayGoals: rawAway,
-        status: matchStatus(fixture.status),
-        updatedAt: new Date().toISOString()
-      };
+    if (matchedFixtures === 0) {
+      const message = "football-data no devolvió partidos emparejables.";
+      const cached = await readPersistentCache(message);
+      return cached ?? safeEmptyPayload(message);
+    }
+
+    if (Object.keys(results).length === 0) {
+      const message = "football-data respondió, pero todavía no hay marcadores.";
+      const cached = await readPersistentCache(message);
+      return cached ?? safeEmptyPayload(message);
     }
 
     const payload: ApiResultsPayload = {
@@ -290,7 +320,6 @@ async function fetchFootballDataResults(): Promise<ApiResultsPayload> {
       cache: "fresh"
     };
 
-    // Guardamos también cuando todavía no hay resultados, porque confirma 72 emparejados.
     await writePersistentCache(payload);
 
     return payload;

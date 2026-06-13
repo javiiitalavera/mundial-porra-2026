@@ -1,5 +1,5 @@
 import { Redis } from "@upstash/redis";
-import matchesJson from "@/data/matches.json";
+import matchesJson from "@/data/matches.json"; import { manualResults } from "@/data/manualResults";
 import type { Match, MatchResult } from "@/lib/types";
 
 const API_URL = "https://api.football-data.org/v4/competitions/WC/matches";
@@ -51,7 +51,7 @@ export type ApiResultsPayload = {
   matchedFixtures: number;
   rawMatches: number;
   stale?: boolean;
-  cache?: "fresh" | "memory" | "redis" | "empty";
+  cache?: "fresh" | "memory" | "redis" | "manual" | "empty";
 };
 
 const matches = matchesJson as Match[];

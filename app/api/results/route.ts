@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { getFootballDataResults } from "@/lib/footballData";
 
-export const revalidate = 600;
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const payload = await getFootballDataResults();
 
   return NextResponse.json(payload, {
     headers: {
-      "Cache-Control": "s-maxage=600, stale-while-revalidate=1800"
+      "Cache-Control": "public, s-maxage=600, stale-while-revalidate=1800"
     }
   });
 }

@@ -10,8 +10,7 @@ export type UpdateStatusPayload = {
   stale?: boolean;
 };
 
-const MIN_CHECK_INTERVAL_MS = 60_000;
-const AUTO_CHECK_INTERVAL_MS = 120_000;
+const MIN_CHECK_INTERVAL_MS = 10 * 60 * 1000;
 
 export function UpdateStatus({ payload }: { payload: UpdateStatusPayload }) {
   const router = useRouter();
@@ -30,10 +29,7 @@ export function UpdateStatus({ payload }: { payload: UpdateStatusPayload }) {
       setChecking(true);
 
       try {
-        const response = await fetch(`/api/results?check=${now}`, {
-          cache: "no-store"
-        });
-
+        const response = await fetch("/api/results");
         const data = await response.json().catch(() => null);
 
         if (data?.updatedAt && data.updatedAt !== payload.updatedAt) {
@@ -50,24 +46,17 @@ export function UpdateStatus({ payload }: { payload: UpdateStatusPayload }) {
   );
 
   useEffect(() => {
-    void checkForUpdates(true);
-
     const onFocus = () => void checkForUpdates(false);
     const onVisibilityChange = () => {
-      if (document.visibilityState === "visible") void checkForUpdates(true);
+      if (document.visibilityState === "visible") void checkForUpdates(false);
     };
 
     window.addEventListener("focus", onFocus);
     document.addEventListener("visibilitychange", onVisibilityChange);
 
-    const interval = window.setInterval(() => {
-      void checkForUpdates(false);
-    }, AUTO_CHECK_INTERVAL_MS);
-
     return () => {
       window.removeEventListener("focus", onFocus);
       document.removeEventListener("visibilitychange", onVisibilityChange);
-      window.clearInterval(interval);
     };
   }, [checkForUpdates]);
 
